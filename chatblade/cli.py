@@ -162,6 +162,10 @@ def cli():
             printer.print_messages(messages, params)
         if params["interactive"]:
             params["last"] = True
-            query = Prompt.ask("[yellow] Enter your next query")
+            try:
+                query = Prompt.ask("[yellow] Enter your next query (ctrl-c to quit)")
+            except KeyboardInterrupt:
+                rich.print("\n")
+                break
         else:
             break
