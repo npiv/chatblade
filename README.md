@@ -106,7 +106,7 @@ chatblade -l -e > toanki
 
 ### Help
 
-```bash
+```
 usage: chatblade [-h] [--last] [--prompt-config PROMPT_CONFIG] [--openai-api-key OPENAI_API_KEY] [--temperature TEMPERATURE] [--chat-gpt {3.5,4}] [--extract] [--raw] [--tokens]
                  [query ...]
 
