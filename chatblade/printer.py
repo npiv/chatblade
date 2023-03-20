@@ -85,7 +85,13 @@ def contains_block(str):
 
 def extract_block(str):
     matches = re.findall(r"```(.*?)```", str, re.DOTALL)
-    return sorted(matches, key=lambda x: len(x))[-1].strip()
+    try:
+        return sorted(matches, key=lambda x: len(x))[-1].strip()
+    except IndexError:
+        return None
+    except Exception as e:
+        print(e)
+        return None
 
 
 def contains_json(str):
