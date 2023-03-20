@@ -6,6 +6,7 @@ import rich
 import yaml
 
 from . import printer, chat, utils
+from rich.prompt import Prompt
 
 
 def get_piped_input():
@@ -65,6 +66,12 @@ def parse_input():
         "--tokens",
         "-t",
         help="Display what *would* be sent, how many tokens, and estimated costs",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--interactive",
+        "-i",
+        help="Start an interactive chat session. This will implicitly continue the conversation",
         action="store_true",
     )
 
@@ -131,25 +138,45 @@ def fetch_and_cache(messages, params):
 
 def cli():
     query, params = parse_input()
+    while True:
+        if params["last"] or params["extract"] or params["raw"]:
+            messages = messages_from_cache()
+            if query:
+                messages.append(chat.Message("user", query))
+        elif "prompt_config" in params:
+            prompt_config = load_prompt_config(params["prompt_config"])
+            messages = chat.init_conversation(query, prompt_config["system"])
+            params = utils.merge_dicts(params, prompt_config)
+        elif query:
+            messages = chat.init_conversation(query)
+        elif params["interactive"]:
+            try:
+                query = Prompt.ask("[yellow] Enter your first query (type 'quit' to exit)")
+            except KeyboardInterrupt:
+                rich.print("\n")
+                break
+            if query.lower() == "quit":
+                break
+            messages = chat.init_conversation(query)
+        else:
+            rich.print("[red]no query or option given. nothing to do...[/red]")
+            exit()
 
-    if params["last"] or params["extract"] or params["raw"]:
-        messages = messages_from_cache()
-        if query:
-            messages.append(chat.Message("user", query))
-    elif "prompt_config" in params:
-        prompt_config = load_prompt_config(params["prompt_config"])
-        messages = chat.init_conversation(query, prompt_config["system"])
-        params = utils.merge_dicts(params, prompt_config)
-    elif query:
-        messages = chat.init_conversation(query)
-    else:
-        rich.print("[red]no query or option given. nothing to do...[/red]")
-        exit()
-
-    if "tokens" in params and params["tokens"]:
-        num_tokens = chat.num_tokens_in_messages(messages)
-        printer.print_tokens(messages, num_tokens, params)
-    else:
-        if messages[-1].role == "user":
-            messages = fetch_and_cache(messages, params)
-        printer.print_messages(messages, params)
+        if "tokens" in params and params["tokens"]:
+            num_tokens = chat.num_tokens_in_messages(messages)
+            printer.print_tokens(messages, num_tokens, params)
+        else:
+            if messages[-1].role == "user":
+                messages = fetch_and_cache(messages, params)
+            printer.print_messages(messages, params)
+        if params["interactive"]:
+            params["last"] = True
+            try:
+                query = Prompt.ask("[yellow] Enter your next query (type 'quit' to exit)")
+            except KeyboardInterrupt:
+                rich.print("\n")
+                break
+            if query.lower() == "quit":
+                break
+        else:
+            break
