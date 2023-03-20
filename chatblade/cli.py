@@ -149,6 +149,15 @@ def cli():
             params = utils.merge_dicts(params, prompt_config)
         elif query:
             messages = chat.init_conversation(query)
+        elif params["interactive"]:
+            try:
+                query = Prompt.ask("[yellow] Enter your first query (type 'quit' to exit)")
+            except KeyboardInterrupt:
+                rich.print("\n")
+                break
+            if query.lower() == "quit":
+                break
+            messages = chat.init_conversation(query)
         else:
             rich.print("[red]no query or option given. nothing to do...[/red]")
             exit()
@@ -163,9 +172,11 @@ def cli():
         if params["interactive"]:
             params["last"] = True
             try:
-                query = Prompt.ask("[yellow] Enter your next query (ctrl-c to quit)")
+                query = Prompt.ask("[yellow] Enter your next query (type 'quit' to exit)")
             except KeyboardInterrupt:
                 rich.print("\n")
+                break
+            if query.lower() == "quit":
                 break
         else:
             break
