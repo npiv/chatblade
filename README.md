@@ -8,7 +8,12 @@ Chatblade is a versatile command-line interface (CLI) tool designed to interact 
 You can do that by either passing `--openai-api-key KEY` or by setting an env variable `OPENAI_API_KEY` (recommended). The examples below all assume an env variable is set.
 
 ### Install
-On Linux-like systems, you should be able to just check out the project and run `pip install .`.
+On Linux-like systems, you should be able to just check out the project and run `pip install .` or install from the git repo:
+
+```bash
+
+pip install 'chatblade @ git+https://github.com/npiv/chatblade'
+```
 
 ## Some Examples
 
