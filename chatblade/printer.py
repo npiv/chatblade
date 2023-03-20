@@ -57,7 +57,7 @@ def extract_messages(messages, args):
     elif contains_block(message.content):
         print(extract_block(message.content))
     else:
-        print(message.content)
+        print(message.content.strip())
 
 
 def detect_and_format_message(msg, cutoff=None):
@@ -88,9 +88,6 @@ def extract_block(str):
     try:
         return sorted(matches, key=lambda x: len(x))[-1].strip()
     except IndexError:
-        return None
-    except Exception as e:
-        print(e)
         return None
 
 
