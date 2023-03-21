@@ -8,14 +8,31 @@ Chatblade is a versatile command-line interface (CLI) tool designed to interact 
 You can do that by either passing `--openai-api-key KEY` or by setting an env variable `OPENAI_API_KEY` (recommended). The examples below all assume an env variable is set.
 
 ### Install
-On Linux-like systems, you should be able to just check out the project and run `pip install .` or install from the git repo:
 
-```bash
+## Latest and greatest
 
-pip install 'chatblade @ git+https://github.com/npiv/chatblade'
+Things are still being added actively, so to stay up to date with the current main branch you can:
+- check out the project, and run `pip install .`
+- or `pip install 'chatblade @ git+https://github.com/npiv/chatblade'
+`
+
+## Via pypi
+
+The last released version can be installed with `pip install chatblade`
+
+## via Brew tap (slow...)
+
+Offical Homebrew acceptance is pending, in the meantime you can use this brew tap: 
+```
+brew tap npiv/chatblade
+brew install chatblade
 ```
 
 ## Some Examples
+
+https://github.com/npiv/chatblade-pub/raw/main/demo.m4v
+
+---
 
 ### Basic
 In its simplest form, Chatblade can perform a straightforward query:
@@ -112,27 +129,24 @@ chatblade -l -e > toanki
 ### Help
 
 ```
-usage: chatblade [-h] [--last] [--prompt-config PROMPT_CONFIG] [--openai-api-key OPENAI_API_KEY] [--temperature TEMPERATURE] [--chat-gpt {3.5,4}] [--extract] [--raw] [--tokens]
-                 [query ...]
+usage: Chatblade [-h] [-l] [-p PROMPT] [--openai-api-key KEY] [--temperature T] [-c {3.5,4}] [-i] [-e] [-r] [-t] [query ...]
 
-Chatblade
+a CLI Swiss Army Knife for ChatGPT
 
 positional arguments:
   query                 Query to send to chat GPT
 
 options:
   -h, --help            show this help message and exit
-  --last, -l            Display the last result. If a query is given, the conversation is continued
-  --prompt-config PROMPT_CONFIG, -p PROMPT_CONFIG
-                        Prompt config name, or file containing a prompt config
-  --openai-api-key OPENAI_API_KEY
-                        OpenAI API key can also be set as env variable OPENAI_API_KEY
-  --temperature TEMPERATURE
-                        Temperature (openai setting)
-  --chat-gpt {3.5,4}, -c {3.5,4}
-                        Chat GPT model (default 3.5)
-  --extract, -e         Extract content from response if possible (either JSON or code block)
-  --raw, -r             print the last response as pure text, don't pretty print or format
-  --tokens, -t          Display what *would* be sent, how many tokens, and estimated costs
-  --interactive, -i     Start an interactive chat session. Specify the -l flag to implicitly continue the last conversation
+  -l, --last            display the last result. If a query is given the conversation is continued
+  -p PROMPT, --prompt-config PROMPT
+                        prompt config name, or file containing a prompt config
+  --openai-api-key KEY  the OpenAI API key can also be set as env variable OPENAI_API_KEY
+  --temperature T       temperature (openai setting)
+  -c {3.5,4}, --chat-gpt {3.5,4}
+                        chat GPT model
+  -i, --interactive     start an interactive chat session. This will implicitly continue the conversation
+  -e, --extract         extract content from response if possible (either json or code block)
+  -r, --raw             print the last response as pure text, don't pretty print or format
+  -t, --tokens          display what *would* be sent, how many tokens, and estimated costs
 ```

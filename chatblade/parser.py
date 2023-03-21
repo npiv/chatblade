@@ -61,11 +61,13 @@ def parse(args):
     parser.add_argument(
         "-p",
         "--prompt-config",
+        metavar="PROMPT",
         type=str,
         help="prompt config name, or file containing a prompt config",
     )
     parser.add_argument(
         "--openai-api-key",
+        metavar="KEY",
         type=str,
         help="the OpenAI API key can also be set as env variable OPENAI_API_KEY",
     )
@@ -77,7 +79,7 @@ def parse(args):
         default=0.0,
     )
     parser.add_argument(
-        "--chat-gpt", "-c", choices=["3.5", "4"], help="chat GPT model", default="3.5"
+        "-c", "--chat-gpt", choices=["3.5", "4"], help="chat GPT model", default="3.5"
     )
 
     parser.add_argument(
