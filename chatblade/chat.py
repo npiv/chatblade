@@ -2,6 +2,8 @@ import collections
 import tiktoken
 import openai
 
+from chatblade import errors
+
 from . import utils
 
 Message = collections.namedtuple("Message", ["role", "content"])
@@ -62,11 +64,14 @@ def query_chat_gpt(messages, config):
     openai.api_key = config["openai_api_key"]
     config = utils.merge_dicts(DEFAULT_OPENAI_SETTINGS, config)
     dict_messages = [msg._asdict() for msg in messages]
-    result = openai.ChatCompletion.create(messages=dict_messages, **config)
-    if not isinstance(result, dict):
-        raise ValueError(
-            "OpenAI Result is not a dict got %s: %s" % (type(result), result)
-        )
-    response_message = [choice["message"] for choice in result["choices"]][0]
-    message = Message(response_message["role"], response_message["content"])
-    return message, result
+    try:
+        result = openai.ChatCompletion.create(messages=dict_messages, **config)
+        if not isinstance(result, dict):
+            raise ValueError(
+                "OpenAI Result is not a dict got %s: %s" % (type(result), result)
+            )
+        response_message = [choice["message"] for choice in result["choices"]][0]
+        message = Message(response_message["role"], response_message["content"])
+        return message, result
+    except openai.InvalidRequestError as e:
+        raise errors.ChatbladeError(f"openai.invalidRequestError: {e}")
