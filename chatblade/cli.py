@@ -1,11 +1,11 @@
-import pickle
 import sys
 import os
 import argparse
 import rich
-import yaml
 
-from . import printer, chat, utils
+from chatblade import errors
+
+from . import printer, chat, utils, storage
 from rich.prompt import Prompt
 
 
@@ -103,55 +103,30 @@ def parse_input():
     return query, params
 
 
-MAX_TOKEN_COUNT = 4096
-CACHE_PATH = "~/.cache/chatblade"
-PROMPT_PATH = "~/.config/chatblade/"
-
-
-def to_cache(messages):
-    path = os.path.expanduser(CACHE_PATH)
-    with open(path, "wb") as f:
-        pickle.dump(messages, f)
-
-
-def messages_from_cache():
-    path = os.path.expanduser(CACHE_PATH)
-    with open(path, "rb") as f:
-        return pickle.load(f)
-
-
-def load_prompt_config(prompt_name):
-    path = os.path.expanduser(PROMPT_PATH + prompt_name + ".yaml")
-    try:
-        with open(path, "r") as f:
-            return yaml.load(f, Loader=yaml.FullLoader)
-    except FileNotFoundError:
-        raise ValueError(f"Prompt {prompt_name} not found in {path}")
-
-
 def fetch_and_cache(messages, params):
     response_msg, _ = chat.query_chat_gpt(messages, params)
     messages.append(response_msg)
-    to_cache(messages)
+    storage.to_cache(messages)
     return messages
 
 
-def cli():
-    query, params = parse_input()
+def handle_input(query, params):
     while True:
         if params["last"] or params["extract"] or params["raw"]:
-            messages = messages_from_cache()
+            messages = storage.messages_from_cache()
             if query:
                 messages.append(chat.Message("user", query))
         elif "prompt_config" in params:
-            prompt_config = load_prompt_config(params["prompt_config"])
+            prompt_config = storage.load_prompt_config(params["prompt_config"])
             messages = chat.init_conversation(query, prompt_config["system"])
             params = utils.merge_dicts(params, prompt_config)
         elif query:
             messages = chat.init_conversation(query)
         elif params["interactive"]:
             try:
-                query = Prompt.ask("[yellow] Enter your first query (type 'quit' to exit)")
+                query = Prompt.ask(
+                    "[yellow] Enter your first query (type 'quit' to exit)"
+                )
             except KeyboardInterrupt:
                 rich.print("\n")
                 break
@@ -172,7 +147,9 @@ def cli():
         if params["interactive"]:
             params["last"] = True
             try:
-                query = Prompt.ask("[yellow] Enter your next query (type 'quit' to exit)")
+                query = Prompt.ask(
+                    "[yellow] Enter your next query (type 'quit' to exit)"
+                )
             except KeyboardInterrupt:
                 rich.print("\n")
                 break
@@ -180,3 +157,11 @@ def cli():
                 break
         else:
             break
+
+
+def cli():
+    query, params = parse_input()
+    try:
+        handle_input(query, params)
+    except errors.ChatbladeError as e:
+        rich.print(f"[red]{e}[/red]")

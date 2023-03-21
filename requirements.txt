@@ -10,6 +10,7 @@ markdown-it-py==2.2.0
 mdurl==0.1.2
 multidict==6.0.4
 openai==0.27.2
+platformdirs==3.1.1
 Pygments==2.14.0
 PyYAML==6.0
 regex==2022.10.31

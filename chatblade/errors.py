@@ -1,0 +1,2 @@
+class ChatbladeError(Exception):
+    pass
