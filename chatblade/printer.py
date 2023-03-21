@@ -14,17 +14,25 @@ DEFAULT_ARGS = {
 }
 
 
-def print_tokens(messages, token_count, args):
+def print_tokens(messages, token_stats, args):
     args = {**DEFAULT_ARGS, **args}
     args["roles"] = ["user", "assistant", "system"]
     print_messages(messages, args)
-    table = Table()
-    table.add_column("Measure", no_wrap=True)
-    table.add_column("Value", style="bold", justify="right")
-    table.add_row("Tokens", f"{token_count}")
-    table.add_row("GPT 3.5", '${:.6f}'.format(0.002 * token_count / 1000))
-    table.add_row("GPT 4", '~ ${:.6f}'.format(0.045 * token_count / 1000))
+    console.print()
+    table = Table(title="tokens/costs")
+    table.add_column("Model", no_wrap=True)
+    table.add_column("Tokens", no_wrap=True)
+    table.add_column("Price", style="bold", justify="right")
+    for token_stat in token_stats:
+        table.add_row(
+            token_stat.name,
+            "{:d}".format(token_stat.tokens),
+            "${:.6f}".format(token_stat.cost),
+        )
     console.print(table)
+    console.print(
+        "[red] * estimated costs do not include the tokens that may be returned[/red]"
+    )
 
 
 def print_messages(messages, args):

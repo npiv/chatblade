@@ -147,8 +147,8 @@ def handle_input(query, params):
         exit()
 
     if "tokens" in params and params["tokens"]:
-        num_tokens = chat.num_tokens_in_messages(messages)
-        printer.print_tokens(messages, num_tokens, params)
+        token_prices = chat.get_tokens_and_costs(messages)
+        printer.print_tokens(messages, token_prices, params)
     else:
         if messages[-1].role == "user":
             messages = fetch_and_cache(messages, params)
