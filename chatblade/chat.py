@@ -1,10 +1,9 @@
 import collections
 import tiktoken
 import openai
+import openai.error
 
-from chatblade import errors
-
-from . import utils
+from . import utils, errors
 
 Message = collections.namedtuple("Message", ["role", "content"])
 CostConfig = collections.namedtuple("CostConfig", "name prompt_cost completion_cost")
@@ -73,5 +72,7 @@ def query_chat_gpt(messages, config):
         response_message = [choice["message"] for choice in result["choices"]][0]
         message = Message(response_message["role"], response_message["content"])
         return message, result
-    except openai.InvalidRequestError as e:
+    except openai.error.InvalidRequestError as e:
         raise errors.ChatbladeError(f"openai.invalidRequestError: {e}")
+    except openai.error.AuthenticationError as e:
+        raise errors.ChatbladeError(f"openai.AuthenticationError: {e}")

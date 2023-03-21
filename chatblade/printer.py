@@ -1,5 +1,6 @@
 import json
 import re
+import rich
 from rich.console import Console
 from rich.panel import Panel
 from rich.json import JSON
@@ -12,6 +13,10 @@ console = Console()
 DEFAULT_ARGS = {
     "roles": ["user", "assistant"],
 }
+
+
+def warn(msg):
+    rich.print(f"[red]{msg}[/red]")
 
 
 def print_tokens(messages, token_stats, args):
