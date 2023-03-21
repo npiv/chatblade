@@ -16,7 +16,7 @@ def start_repl(messages, params):
     while True:
         try:
             query = Prompt.ask("[yellow]query (type 'quit' to exit): [/yellow]")
-        except KeyboardInterrupt:
+        except (EOFError, KeyboardInterrupt):
             rich.print("\n")
             exit()
         if query.lower() == "quit":
