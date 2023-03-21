@@ -134,5 +134,5 @@ options:
   --extract, -e         Extract content from response if possible (either JSON or code block)
   --raw, -r             print the last response as pure text, don't pretty print or format
   --tokens, -t          Display what *would* be sent, how many tokens, and estimated costs
-  --interactive, -i         Start an interactive chat session. Specify the -l flag to implicitly continue the last conversation
+  --interactive, -i     Start an interactive chat session. Specify the -l flag to implicitly continue the last conversation
 ```
