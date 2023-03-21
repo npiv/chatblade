@@ -22,8 +22,8 @@ def print_tokens(messages, token_count, args):
     table.add_column("Measure", no_wrap=True)
     table.add_column("Value", style="bold", justify="right")
     table.add_row("Tokens", f"{token_count}")
-    table.add_row("GPT 3.5", f"${0.002 * token_count / 1000}")
-    table.add_row("GPT 4", f"~ ${0.045 * token_count / 1000}")
+    table.add_row("GPT 3.5", '${:.6f}'.format(0.002 * token_count / 1000))
+    table.add_row("GPT 4", '~ ${:.6f}'.format(0.045 * token_count / 1000))
     console.print(table)
 
 
