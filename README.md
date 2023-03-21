@@ -7,20 +7,20 @@ Chatblade is a versatile command-line interface (CLI) tool designed to interact 
 
 You can do that by either passing `--openai-api-key KEY` or by setting an env variable `OPENAI_API_KEY` (recommended). The examples below all assume an env variable is set.
 
-### Install
+## Install
 
-## Latest and greatest
+### Latest and greatest
 
 Things are still being added actively, so to stay up to date with the current main branch you can:
 - check out the project, and run `pip install .`
 - or `pip install 'chatblade @ git+https://github.com/npiv/chatblade'
 `
 
-## Via pypi
+### Via pypi
 
 The last released version can be installed with `pip install chatblade`
 
-## via Brew tap (slow...)
+### via Brew tap (slow...)
 
 Offical Homebrew acceptance is pending, in the meantime you can use this brew tap: 
 ```
@@ -29,10 +29,6 @@ brew install chatblade
 ```
 
 ## Some Examples
-
-https://github.com/npiv/chatblade-pub/raw/main/demo.m4v
-
----
 
 ### Basic
 In its simplest form, Chatblade can perform a straightforward query:
