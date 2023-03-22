@@ -38,7 +38,8 @@ def print_tokens(messages, token_stats, args):
 
 
 def print_messages(messages, args):
-    args.roles = ["user", "assistant"]
+    if "roles" not in args:
+        args.roles = ["user", "assistant"]
     if args.extract:
         extract_messages(messages, args)
     else:
