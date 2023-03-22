@@ -52,10 +52,9 @@ def handle_input(query, params):
         messages = storage.messages_from_cache()
         if query:  # continue conversation
             messages.append(chat.Message("user", query))
-    elif params.prompt_config:
-        prompt_config = storage.load_prompt_config(params.prompt_config)
-        messages = chat.init_conversation(query, prompt_config["system"])
-        params = utils.merge_dicts(params, prompt_config)
+    elif params.prompt_file:
+        prompt_file = storage.load_prompt_file(params.prompt_file)
+        messages = chat.init_conversation(query, prompt_file)
     elif query:
         messages = chat.init_conversation(query)
     elif params.interactive:

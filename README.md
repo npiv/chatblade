@@ -138,31 +138,34 @@ This won't perform any action over the wire, and just calculates the tokens loca
 
 ### Make custom prompts
 
-We can also save common prompt configs for easy reuse. Any yaml file we place under ~/.config/chatblade/ will be picked up by the command.
+We can also save commonly used prompts. Any file we place under ~/.config/chatblade/ will be picked up by the command.
+
+So for example given the following file in `~/.config/chatblade/et`
+
+which contains:
 
 So for example, given the following yaml called `etymology.yaml`, which contains:
-```yaml
-system: |-
-  I want you to act as a professional Etymologist and Quiz Generator. You have a deep knowledge of etymology and will be provided with a word. 
-  The goal is to create cards that quiz on both the etymology and finding the word by its definition.
+```
+I want you to act as a professional Etymologist and Quiz Generator. You have a deep knowledge of etymology and will be provided with a word. 
+The goal is to create cards that quiz on both the etymology and finding the word by its definition.
 
-  The following is what a perfect answer would look like for the word "disparage":
+The following is what a perfect answer would look like for the word "disparage":
 
-  [{
-    "question": "A verb used to indicate the act of speaking about someone or something in a negative or belittling way.<br/> <i>E.g He would often _______ his coworkers behind their backs.</i>",
-    "answer": "disparage"
-  },
-  {
-    "question": "What is the etymological root of the word disparage?",
-    "answer": "From the Old French word <i>'desparagier'</i>, meaning 'marry someone of unequal rank', which comes from <i>'des-'</i> (dis-) and <i>'parage'</i> (equal rank)"
-  }]
+[{
+  "question": "A verb used to indicate the act of speaking about someone or something in a negative or belittling way.<br/> <i>E.g He would often _______ his coworkers behind their backs.</i>",
+  "answer": "disparage"
+},
+{
+  "question": "What is the etymological root of the word disparage?",
+  "answer": "From the Old French word <i>'desparagier'</i>, meaning 'marry someone of unequal rank', which comes from <i>'des-'</i> (dis-) and <i>'parage'</i> (equal rank)"
+}]
 
-  You will return answers in JSON only. Answer truthfully and if you don't know then say so. Keep questions as close as possible to the
-  provided examples. Make sure to include an example in the definition question. Use HTML within the strings to nicely format your answers.
+You will return answers in JSON only. Answer truthfully and if you don't know then say so. Keep questions as close as possible to the
+provided examples. Make sure to include an example in the definition question. Use HTML within the strings to nicely format your answers.
 
-  If multiple words are provided, create questions and answers for each of them in one list. 
-  
-  Only answer in JSON, don't provide any more text. Valid JSON uses "" quotes to wrap its items.
+If multiple words are provided, create questions and answers for each of them in one list. 
+
+Only answer in JSON, don't provide any more text. Valid JSON uses "" quotes to wrap its items.
 ```
 
 We can now run a command and refer to this prompt with `-p etymology`:
@@ -182,7 +185,7 @@ chatblade -l -e > toanki
 ### Help
 
 ```
-usage: Chatblade [-h] [-l] [-p PROMPT] [--openai-api-key KEY] [--temperature T] [-c {3.5,4}] [-i] [-s] [-e] [-r] [-t] [query ...]
+usage: Chatblade [-h] [-l] [-p P] [--openai-api-key KEY] [--temperature T] [-c {3.5,4}] [-i] [-s] [-e] [-r] [-t] [query ...]
 
 a CLI Swiss Army Knife for ChatGPT
 
@@ -192,8 +195,8 @@ positional arguments:
 options:
   -h, --help            show this help message and exit
   -l, --last            display the last result. If a query is given the conversation is continued
-  -p PROMPT, --prompt-config PROMPT
-                        prompt config name, or file containing a prompt config
+  -p P, --prompt-file P
+                        prompt name - will load the prompt at ~/.config/chatblade/P
   --openai-api-key KEY  the OpenAI API key can also be set as env variable OPENAI_API_KEY
   --temperature T       temperature (openai setting)
   -c {3.5,4}, --chat-gpt {3.5,4}

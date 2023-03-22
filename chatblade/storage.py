@@ -44,8 +44,23 @@ def messages_from_cache():
             return pickle.load(f)
 
 
-def load_prompt_config(prompt_name):
+def load_prompt_file(prompt_name):
     """
+    load a prompt configuration by its name
+    Assumes the user created the ~/.config/chatblade/{prompt_name}
+    """
+    path = os.path.expanduser(os.path.join("~/.config/chatblade", f"{prompt_name}"))
+    try:
+        with open(path, "r") as f:
+            return f.read()
+    except FileNotFoundError:
+        # fallback
+        return load_prompt_config_legacy_yaml(prompt_name)
+
+
+def load_prompt_config_legacy_yaml(prompt_name):
+    """
+    LEGACY: keep right now for people that still use yaml
     load a prompt configuration by its name
     Assumes the user created the {name}.yaml in ~/.config/chatblade
     """
@@ -54,6 +69,6 @@ def load_prompt_config(prompt_name):
     )
     try:
         with open(path, "r") as f:
-            return yaml.load(f, Loader=yaml.FullLoader)
+            return yaml.load(f, Loader=yaml.FullLoader)["system"]
     except FileNotFoundError:
         raise errors.ChatbladeError(f"Prompt {prompt_name} not found in {path}")

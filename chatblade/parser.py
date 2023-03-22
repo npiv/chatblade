@@ -60,20 +60,20 @@ def parse(args):
     )
     parser.add_argument(
         "-p",
-        "--prompt-config",
-        metavar="PROMPT",
+        "--prompt-file",
+        metavar="name",
         type=str,
-        help="prompt config name, or file containing a prompt config",
+        help="prompt name - will load the prompt at ~/.config/chatblade/name as system msg",
     )
     parser.add_argument(
         "--openai-api-key",
-        metavar="KEY",
+        metavar="key",
         type=str,
         help="the OpenAI API key can also be set as env variable OPENAI_API_KEY",
     )
     parser.add_argument(
         "--temperature",
-        metavar="T",
+        metavar="t",
         type=float,
         help="temperature (openai setting)",
         default=0.0,
