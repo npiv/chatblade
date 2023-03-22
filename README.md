@@ -11,7 +11,7 @@ You can do that by either passing `--openai-api-key KEY` or by setting an env va
 
 ### Latest and greatest
 
-Things are still being added actively, so to stay up to date with the current main branch you can:
+To stay up to date with the current main branch you can:
 - check out the project, and run `pip install .`
 - or `pip install 'chatblade @ git+https://github.com/npiv/chatblade'
 
@@ -27,20 +27,30 @@ brew tap npiv/chatblade
 brew install chatblade
 ```
 
-## Some Examples
+## Documentation
 
-https://user-images.githubusercontent.com/452020/226832748-0ffb8c99-286e-4f3c-827f-4fa3c47706ca.mp4
+### Making queries
 
-### Basic
-In its simplest form, Chatblade can perform a straightforward query:
+#### A new conversation
+
+You can begin any query by just typing. eg
+
 ```bash
 chatblade how can I extract a still frame from a video at 22:01 with ffmpeg
 ```
-
 <img src="assets/example1.png">
 
-### Continue a conversation and extract
-To continue the conversation and ask for a change, you can use the `-l` flag for "last."
+#### viewing the last conversation
+
+if you would like to view the last conversation just call it back with `-l`
+
+```bash
+chatblade -l
+```
+
+#### Continue the last conversation
+
+To continue the conversation and ask for a change within the context, you can again use `-l` but with a query.
 
 ```bash
 chatblade -l can we make a gif instead from 00:22:01 to 00:22:04
@@ -48,18 +58,25 @@ chatblade -l can we make a gif instead from 00:22:01 to 00:22:04
 
 <img src="assets/example2.png">
 
-You can also use `-l` without a query to redisplay the last thread at any point.
+#### Chatting interactively
 
-If you want to extract the last suggested command, you can use the `-e` flag. For example:
+If you would prefer to chat interactively instead just use `chatblade -i`.
 
-```bash
-chatblade -e | pbcopy
-```
+### Formatting the results
 
-This command places the `ffmpeg` suggestion in your clipboard on macOS.
+Responses that come back are always shown as markdown. Sometimes this may not be what you want, as it removes new lines, or because you are only interested in extracting a part of the result to pipe to another command.
 
-### Piping into Chatblade
-You can pipe input to Chatblade:
+In that case you have 2 options:
+- `-r` for raw, which just prints the text as ChatGPT returned it, and doesn't pass it through markdown.
+- `-e` for extract, which will try to detect what was returned (either a code block or json) and extract only that part.
+
+Both options can be used either with a new query, e.g. `chatblade -e how can I extract the audio from ffmpeg | pbcopy` or with last `chatblade -l -e`.
+
+### Piping content into chatblade
+
+If we have long prompts we don't want to type everytime, or just want to provide context for our query we can pipe into chatblade.
+
+e.g.
 
 ```bash
 curl https://news.ycombinator.com/rss | chatblade given the above rss can you show me the top 3 articles about AI and their links -c 4
@@ -69,7 +86,21 @@ The piped input is placed above the query and sent to ChatGPT. In this example, 
 
 <img src="assets/example3.png">
 
-### Check token count and estimated costs
+or 
+
+```bash
+chatblade what does this script do < script.sh
+```
+
+What gets sent to ChatGPT over the wire is:
+```
+piped input
+-------
+query
+```
+
+### Checking token count and estimated costs
+
 If you want to check the approximate cost and token usage of a previous query, you can use the `-t` flag for "tokens."
 
 ```bash
