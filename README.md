@@ -72,6 +72,9 @@ You can also stream the responses, just like in the webui. At the end of the str
 
 ```chatblade -s -i```
 
+https://user-images.githubusercontent.com/452020/226891636-54d12df2-528f-4365-a4f3-e51cb025773c.mov
+
+
 ### Formatting the results
 
 Responses that come back are always shown as markdown. Sometimes this may not be what you want, as it removes new lines, or because you are only interested in extracting a part of the result to pipe to another command.
