@@ -34,9 +34,7 @@ def start_repl(messages, params):
 def handle_input(query, params):
     utils.debug(title="cli input", query=query, params=params)
 
-    show_last = params.last or params.extract or params.raw
-
-    if show_last:
+    if params.last:
         messages = storage.messages_from_cache()
         if query:  # continue conversation
             messages.append(chat.Message("user", query))
