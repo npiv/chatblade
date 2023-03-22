@@ -13,7 +13,7 @@ You can do that by either passing `--openai-api-key KEY` or by setting an env va
 
 To stay up to date with the current main branch you can:
 - check out the project, and run `pip install .`
-- or `pip install 'chatblade @ git+https://github.com/npiv/chatblade'
+- or `pip install 'chatblade @ git+https://github.com/npiv/chatblade'`
 
 ### Via pypi
 
