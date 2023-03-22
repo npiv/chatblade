@@ -7,12 +7,10 @@ from rich.markdown import Markdown
 from rich.table import Table
 from rich.rule import Rule
 
+from chatblade import utils
+
 
 console = Console()
-
-DEFAULT_ARGS = {
-    "roles": ["user", "assistant"],
-}
 
 
 def warn(msg):
@@ -20,8 +18,7 @@ def warn(msg):
 
 
 def print_tokens(messages, token_stats, args):
-    args = {**DEFAULT_ARGS, **args}
-    args["roles"] = ["user", "assistant", "system"]
+    args.roles = ["user", "assistant", "system"]
     print_messages(messages, args)
     console.print()
     table = Table(title="tokens/costs")
@@ -41,14 +38,12 @@ def print_tokens(messages, token_stats, args):
 
 
 def print_messages(messages, args):
-    args = {**DEFAULT_ARGS, **args}
-    if args["raw"]:
-        print(messages[-1].content)
-    elif args["extract"]:
+    args.roles = ["user", "assistant"]
+    if args.extract:
         extract_messages(messages, args)
     else:
         for message in messages:
-            if message.role in args["roles"]:
+            if message.role in args.roles:
                 print_message(message, args)
 
 
@@ -56,11 +51,18 @@ COLORS = {"user": "blue", "assistant": "green", "system": "red"}
 
 
 def print_message(message, args):
-    printable = detect_and_format_message(
-        message.content, cutoff=1000 if message.role == "user" else None
-    )
+    printable = message.content
+    if not args.raw:
+        printable = detect_and_format_message(
+            message.content, cutoff=1000 if message.role == "user" else None
+        )
     console.print(Rule(message.role, style=COLORS[message.role]))
-    console.print(printable)
+
+    if args.raw:
+        print(message.content)
+    else:
+        console.print(printable)
+
     console.print(Rule(style=COLORS[message.role]))
 
 
@@ -75,12 +77,18 @@ def extract_messages(messages, args):
 
 
 def detect_and_format_message(msg, cutoff=None):
-    if contains_json(msg):
+    if cutoff and len(msg) > cutoff:
+        msg = "... **text shortened** ... " + msg[-cutoff:]
+        return msg
+    elif contains_json(msg):
+        utils.debug(detected="json")
         return JSON(extract_json(msg))
-    else:
-        if cutoff and len(msg) > cutoff:
-            msg = "... **text shortened** ... " + msg[-cutoff:]
+    elif looks_like_markdown(msg):
+        utils.debug(detected="markdown")
         return Markdown(msg)
+    else:
+        utils.debug(detected="regular")
+        return msg
 
 
 def extract_json_lists(str_lists, flatten=False):
@@ -98,11 +106,30 @@ def contains_block(str):
 
 
 def extract_block(str):
-    matches = re.findall(r"```(.*?)```", str, re.DOTALL)
+    matches = re.findall(r"```[\w]*(.*?)```", str, re.DOTALL)
     try:
         return sorted(matches, key=lambda x: len(x))[-1].strip()
     except IndexError:
         return None
+
+
+def looks_like_markdown(str):
+    """very rudimentary, but avoids making things markdown that shouldn't be"""
+    md_links = len(re.findall(r"\[[^]]+\]\(https?:\/\/\S+\)", str))
+    md_text = len(re.findall(r"\s(__|\*\*)(?!\s)(.(?!\1))+(?!\s(?=\1))", str))
+    md_blocks = len(re.findall(r"```(.*?)```", str, re.DOTALL))
+    md_inline_blocks = len(re.findall(r"`[^`]+`", str)) - md_blocks
+
+    md_blocks *= 2
+    utils.debug(
+        title="counted",
+        md_links=md_links,
+        md_text=md_text,
+        md_inline_blocks=md_inline_blocks,
+        md_blocks=md_blocks,
+    )
+    score = md_links + md_text + md_inline_blocks + md_blocks
+    return score >= 2
 
 
 def contains_json(str):

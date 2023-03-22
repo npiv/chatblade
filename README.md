@@ -66,6 +66,12 @@ By default gpt-3.5 is used, you can switch at any point to 4 by using `-c 4`
 
 If you would prefer to chat interactively instead just use `chatblade -i`.
 
+#### Show streaming text (experimental)
+
+You can also stream the responses, just like in the webui. At the end of the stream it will format the result. This can be combined in an interactive session 
+
+```chatblade -s -i```
+
 ### Formatting the results
 
 Responses that come back are always shown as markdown. Sometimes this may not be what you want, as it removes new lines, or because you are only interested in extracting a part of the result to pipe to another command.

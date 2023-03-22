@@ -88,6 +88,12 @@ def parse(args):
         help="start an interactive chat session. This will implicitly continue the conversation",
         action="store_true",
     )
+    parser.add_argument(
+        "-s",
+        "--stream",
+        help="Stream the incoming text to the terminal",
+        action="store_true",
+    )
 
     # ------ Display Options
     parser.add_argument(

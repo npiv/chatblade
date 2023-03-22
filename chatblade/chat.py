@@ -1,4 +1,5 @@
 import collections
+import types
 import tiktoken
 import openai
 import openai.error
@@ -55,7 +56,27 @@ DEFAULT_OPENAI_SETTINGS = {
     "model": "gpt-3.5-turbo",
     "temperature": 0.1,
     "n": 1,
+    "stream": False,
 }
+
+
+def map_generator(openai_gen):
+    """maps a openai streaming generator a stream of Message with the
+    final one being the completed Message"""
+    role, message = None, ""
+    for update in openai_gen:
+        delta = [choice["delta"] for choice in update["choices"]][0]
+        if "role" in delta:
+            role = delta["role"]
+        elif "content" in delta:
+            message += delta["content"]
+        yield Message(role, message)
+
+
+def map_single(result):
+    """maps a result to a Message"""
+    response_message = [choice["message"] for choice in result["choices"]][0]
+    return Message(response_message["role"], response_message["content"])
 
 
 def query_chat_gpt(messages, config):
@@ -65,13 +86,12 @@ def query_chat_gpt(messages, config):
     dict_messages = [msg._asdict() for msg in messages]
     try:
         result = openai.ChatCompletion.create(messages=dict_messages, **config)
-        if not isinstance(result, dict):
-            raise ValueError(
-                "OpenAI Result is not a dict got %s: %s" % (type(result), result)
-            )
-        response_message = [choice["message"] for choice in result["choices"]][0]
-        message = Message(response_message["role"], response_message["content"])
-        return message, result
+        if isinstance(result, types.GeneratorType):
+            return map_generator(result)
+        elif isinstance(result, dict):
+            return map_single(result)
+        else:
+            raise ValueError(f"unexpected result openai: {result}")
     except (
         openai.error.InvalidRequestError,
         openai.error.AuthenticationError,
