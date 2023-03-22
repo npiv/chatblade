@@ -14,7 +14,6 @@ You can do that by either passing `--openai-api-key KEY` or by setting an env va
 Things are still being added actively, so to stay up to date with the current main branch you can:
 - check out the project, and run `pip install .`
 - or `pip install 'chatblade @ git+https://github.com/npiv/chatblade'
-`
 
 ### Via pypi
 
@@ -29,6 +28,8 @@ brew install chatblade
 ```
 
 ## Some Examples
+
+https://user-images.githubusercontent.com/452020/226832748-0ffb8c99-286e-4f3c-827f-4fa3c47706ca.mp4
 
 ### Basic
 In its simplest form, Chatblade can perform a straightforward query:
