@@ -38,7 +38,9 @@ You can begin any query by just typing. eg
 ```bash
 chatblade how can I extract a still frame from a video at 22:01 with ffmpeg
 ```
-<img src="assets/example1.png">
+<img width="650" alt="image" src="https://user-images.githubusercontent.com/452020/226869260-1dcd4faf-521c-466b-998a-fd5cfdc5b3c7.png">
+
+
 
 #### viewing the last conversation
 
@@ -56,7 +58,9 @@ To continue the conversation and ask for a change within the context, you can ag
 chatblade -l can we make a gif instead from 00:22:01 to 00:22:04
 ```
 
-<img src="assets/example2.png">
+#### Picking between gpt-3.5 and 4
+
+By default gpt-3.5 is used, you can switch at any point to 4 by using `-c 4`
 
 #### Chatting interactively
 
@@ -70,7 +74,16 @@ In that case you have 2 options:
 - `-r` for raw, which just prints the text as ChatGPT returned it, and doesn't pass it through markdown.
 - `-e` for extract, which will try to detect what was returned (either a code block or json) and extract only that part.
 
-Both options can be used either with a new query, e.g. `chatblade -e how can I extract the audio from ffmpeg | pbcopy` or with last `chatblade -l -e`.
+Both options can be used either with a new query, e.g. 
+
+```bash
+chatblade -e write me a python boilerplate script that starts a server and prints hello world > main.py
+```
+
+or with the last result (json in this example)
+```bash
+chatblade -l -e | jq
+```
 
 ### Piping content into chatblade
 
@@ -82,7 +95,7 @@ e.g.
 curl https://news.ycombinator.com/rss | chatblade given the above rss can you show me the top 3 articles about AI and their links -c 4
 ```
 
-The piped input is placed above the query and sent to ChatGPT. In this example, we also use the `-c 4` flag to select ChatGPT-4 (the default is ChatGPT-3.5).
+The piped input is placed above the query and sent to ChatGPT. 
 
 <img src="assets/example3.png">
 
@@ -93,6 +106,7 @@ chatblade what does this script do < script.sh
 ```
 
 What gets sent to ChatGPT over the wire is:
+
 ```
 piped input
 -------
@@ -103,11 +117,13 @@ query
 
 If you want to check the approximate cost and token usage of a previous query, you can use the `-t` flag for "tokens."
 
+We could do this when passing in a lot of context like in the example above for instance.
+
 ```bash
 curl https://news.ycombinator.com/rss | chatblade given the above rss can you show me the top 3 articles about AI and their links -t
 ```
 
-<img src="assets/example4.png">
+<img width="650" alt="image" src="https://user-images.githubusercontent.com/452020/226874588-28c53f53-1d19-4ce3-b7ec-b01c2f7cf75a.png">
 
 This won't perform any action over the wire, and just calculates the tokens locally.
 
