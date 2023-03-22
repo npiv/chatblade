@@ -17,7 +17,7 @@ To stay up to date with the current main branch you can:
 
 ### Via pypi
 
-The last released version can be installed with `pip install chatblade`
+The last released version can be installed with `pip install chatblade --upgrade`
 
 ### via Brew tap (slow...)
 
