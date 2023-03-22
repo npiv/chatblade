@@ -1,3 +1,6 @@
+import time
+from itertools import cycle
+from rich.progress import Progress
 from rich.pretty import pprint
 
 CONSOLE_DEBUG_LOGGING = False
@@ -24,3 +27,26 @@ def debug(title=None, **kwargs):
             pprint({f"{title}": kwargs})
         else:
             pprint(kwargs)
+
+
+def breathing(stopper):
+    breathing_phases = [
+	["[blue]Inhale...", 400],
+	["[green]Hold.....", 700],
+	["[blue]Exhale...", 800],
+    ]
+
+    for i in cycle(breathing_phases):
+        p = Progress(transient=True)
+        p.columns[2].text_format = ""
+
+        with p as progress:
+            task = progress.add_task(i[0], total=i[1])
+            while not progress.finished:
+                if stopper.is_set():
+                    break
+                progress.update(task, advance=10)
+                time.sleep(0.1)
+            if stopper.is_set():
+                break
+

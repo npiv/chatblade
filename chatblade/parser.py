@@ -108,6 +108,12 @@ def parse(args):
         help="display what *would* be sent, how many tokens, and estimated costs",
         action="store_true",
     )
+    parser.add_argument(
+        "-b",
+        "--breathe",
+        help="Do 4-7-8 breathing exercise when waiting for the API reply",
+        action="store_true",
+    )
 
     # --- debug
     parser.add_argument("--debug", action="store_true", help=argparse.SUPPRESS)

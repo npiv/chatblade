@@ -1,12 +1,20 @@
 import sys
 import rich
+import threading
 from rich.prompt import Prompt
 
 from . import printer, chat, utils, storage, errors, parser
 
 
 def fetch_and_cache(messages, params):
+    if params["breathe"]:
+        stopper = threading.Event()
+        thread = threading.Thread(target=utils.breathing, args=[stopper])
+        thread.start()
     response_msg, _ = chat.query_chat_gpt(messages, params)
+    if params["breathe"]:
+        stopper.set()
+        thread.join()
     messages.append(response_msg)
     storage.to_cache(messages)
     return messages
