@@ -72,7 +72,9 @@ def query_chat_gpt(messages, config):
         response_message = [choice["message"] for choice in result["choices"]][0]
         message = Message(response_message["role"], response_message["content"])
         return message, result
-    except openai.error.InvalidRequestError as e:
-        raise errors.ChatbladeError(f"openai.invalidRequestError: {e}")
-    except openai.error.AuthenticationError as e:
-        raise errors.ChatbladeError(f"openai.AuthenticationError: {e}")
+    except (
+        openai.error.InvalidRequestError,
+        openai.error.AuthenticationError,
+        openai.error.RateLimitError,
+    ) as e:
+        raise errors.ChatbladeError(f"openai error: {e}")
