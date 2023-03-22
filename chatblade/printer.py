@@ -2,10 +2,10 @@ import json
 import re
 import rich
 from rich.console import Console
-from rich.panel import Panel
 from rich.json import JSON
 from rich.markdown import Markdown
 from rich.table import Table
+from rich.rule import Rule
 
 
 console = Console()
@@ -59,8 +59,9 @@ def print_message(message, args):
     printable = detect_and_format_message(
         message.content, cutoff=1000 if message.role == "user" else None
     )
-    printable = Panel(printable, title=message.role, border_style=COLORS[message.role])
+    console.print(Rule(message.role, style=COLORS[message.role]))
     console.print(printable)
+    console.print(Rule(style=COLORS[message.role]))
 
 
 def extract_messages(messages, args):
