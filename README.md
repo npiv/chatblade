@@ -182,7 +182,7 @@ chatblade -l -e > toanki
 ### Help
 
 ```
-usage: Chatblade [-h] [-l] [-p PROMPT] [--openai-api-key KEY] [--temperature T] [-c {3.5,4}] [-i] [-e] [-r] [-t] [query ...]
+usage: Chatblade [-h] [-l] [-p PROMPT] [--openai-api-key KEY] [--temperature T] [-c {3.5,4}] [-i] [-s] [-e] [-r] [-t] [query ...]
 
 a CLI Swiss Army Knife for ChatGPT
 
@@ -199,6 +199,7 @@ options:
   -c {3.5,4}, --chat-gpt {3.5,4}
                         chat GPT model
   -i, --interactive     start an interactive chat session. This will implicitly continue the conversation
+  -s, --stream          Stream the incoming text to the terminal
   -e, --extract         extract content from response if possible (either json or code block)
   -r, --raw             print the last response as pure text, don't pretty print or format
   -t, --tokens          display what *would* be sent, how many tokens, and estimated costs
