@@ -19,6 +19,20 @@ To stay up to date with the current main branch you can:
 
 The last released version can be installed with `pip install chatblade --upgrade`
 
+### via tea (fast!)
+
+You can use chatblade with [`tea`](https://github.com/teaxyz/cli) without installing anything ;)
+
+```sh
+# with the one-liner abstraction
+sh <(curl -s https://tea.xyz) chatblade how can I extract a still frame from a video at 22:01 with ffmpeg
+
+# if you have `tea` installed already, you can simply run the command
+chatblade how can I extract a still frame from a video at 22:01 with ffmpeg
+
+## `tea` will install all dependencies to run chatblade.
+```
+
 ### via Brew tap (slow...)
 
 Offical Homebrew acceptance is pending, in the meantime you can use this brew tap: 
