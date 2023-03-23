@@ -140,11 +140,8 @@ This won't perform any action over the wire, and just calculates the tokens loca
 
 We can also save commonly used prompts. Any file we place under ~/.config/chatblade/ will be picked up by the command.
 
-So for example given the following file in `~/.config/chatblade/et`
+So for example, given the following yaml called `~/.config/chatblade/etymology.yaml`, which contains:
 
-which contains:
-
-So for example, given the following yaml called `etymology.yaml`, which contains:
 ```
 I want you to act as a professional Etymologist and Quiz Generator. You have a deep knowledge of etymology and will be provided with a word. 
 The goal is to create cards that quiz on both the etymology and finding the word by its definition.
