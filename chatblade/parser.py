@@ -46,17 +46,32 @@ def extract_options(options):
     return utils.DotDict(options)
 
 
+def valid_session(sess):
+    if all(char not in sess for char in ["/","\\","\n"]):
+        return sess
+    else:
+        raise argparse.ArgumentTypeError(f"invalid session name {sess}")
+
+
 def parse(args):
     parser = argparse.ArgumentParser(
         "Chatblade", description="a CLI Swiss Army Knife for ChatGPT"
     )
     parser.add_argument("query", type=str, nargs="*", help="Query to send to chat GPT")
     parser.add_argument(
+        "-S",
+        "--session",
+        metavar="sess",
+        type=valid_session,
+        help="""initiate or continue session""",
+    )
+    parser.add_argument(
         "-l",
         "--last",
-        action="store_true",
-        help="""display the last result. 
-        If a query is given the conversation is continued""",
+        dest="session",
+        action="store_const",
+        const=utils.scratch_session,
+        help=f"alias for '-S {utils.scratch_session}'",
     )
     parser.add_argument(
         "-p",
@@ -105,7 +120,7 @@ def parse(args):
     parser.add_argument(
         "-r",
         "--raw",
-        help="print the last response as pure text, don't pretty print or format",
+        help="print session as pure text, don't pretty print or format",
         action="store_true",
     )
     parser.add_argument(

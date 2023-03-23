@@ -1,5 +1,6 @@
 import sys
 import types
+import os
 
 import rich
 from rich.prompt import Prompt
@@ -22,7 +23,7 @@ def fetch_and_cache(messages, params):
     else:
         response_msg = chat.query_chat_gpt(messages, params)
     messages.append(response_msg)
-    storage.to_cache(messages)
+    storage.to_cache(messages, params.session or utils.scratch_session)
     return messages
 
 
@@ -48,35 +49,64 @@ def start_repl(messages, params):
 def handle_input(query, params):
     utils.debug(title="cli input", query=query, params=params)
 
-    if params.last:
-        messages = storage.messages_from_cache()
-        if query:  # continue conversation
-            messages.append(chat.Message("user", query))
-    elif params.prompt_file:
-        prompt_file = storage.load_prompt_file(params.prompt_file)
-        messages = chat.init_conversation(query, prompt_file)
-    elif query:
-        messages = chat.init_conversation(query)
+    messages = None
+    if params.session:
+        messages = storage.messages_from_cache(params.session)
+    if messages: # a session specified and it alredy exists
+      if params.prompt_file:
+        printer.warn("refusing to prepend prompt to existing session")
+        exit(1)
+      if query:  # continue conversation
+        messages.append(chat.Message("user", query))
+    else:
+      init_args = []
+      if params.prompt_file:
+        init_args.append(storage.load_prompt_file(params.prompt_file))
+      if query or init_args:
+        messages = chat.init_conversation(query, *init_args)
+
+    if messages:
+        if params.tokens:
+            token_prices = chat.get_tokens_and_costs(messages)
+            printer.print_tokens(messages, token_prices, params)
+        else:
+            if messages[-1].role == "user":
+                messages = fetch_and_cache(messages, params)
+            printer.print_messages(messages, params)
     elif params.interactive:
-        start_repl(None, params)
+        pass
     else:
         printer.warn("no query or option given. nothing to do...")
         exit()
-
-    if params.tokens:
-        token_prices = chat.get_tokens_and_costs(messages)
-        printer.print_tokens(messages, token_prices, params)
-    else:
-        if messages[-1].role == "user":
-            messages = fetch_and_cache(messages, params)
-        printer.print_messages(messages, params)
 
     if params.interactive:
         start_repl(messages, params)
 
 
+def migrate_old_cahe_file(session):
+    cache_path = storage.get_cache_path()
+    if os.path.isfile(cache_path):
+        printer.warn("old style cache file detected")
+        if session == utils.scratch_session:
+            printer.warn(f"refusing to migrate old cache file to session '{utils.scratch_session}'")
+            printer.warn(f"('{utils.scratch_session}' is special, sessionless queries will overwrite it)")
+            return 1
+        elif session:
+            printer.warn(f"attempting to migrate old cache to session '{session}'...")
+            storage.migrate_to_session(session)
+            printer.warn("done.")
+            return 0
+        else:
+            printer.warn("please specify a session where the old cache file can be migrated,")
+            printer.warn(f"or remove the old cache file at {cache_path}")
+            return 1
+
+
 def cli():
     query, params = parser.parse(sys.argv[1:])
+    migrate_res = migrate_old_cahe_file(params.session)
+    if migrate_res is not None:
+        exit(migrate_res)
     if params.debug:
         utils.CONSOLE_DEBUG_LOGGING = True
     try:

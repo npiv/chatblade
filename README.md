@@ -42,21 +42,31 @@ chatblade how can I extract a still frame from a video at 22:01 with ffmpeg
 
 
 
-#### viewing the last conversation
+#### revisiting an earlier conversation
 
-if you would like to view the last conversation just call it back with `-l`
+Sessions are named conversations.
 
-```bash
-chatblade -l
-```
-
-#### Continue the last conversation
-
-To continue the conversation and ask for a change within the context, you can again use `-l` but with a query.
+If you start chatblade with a session name SESS of your choice:
 
 ```bash
-chatblade -l can we make a gif instead from 00:22:01 to 00:22:04
+chatblade -S SESS can we make a gif instead from 00:22:01 to 00:22:04
 ```
+
+chatblade will create a session called SESS if it does not exist, and it will store the current exchange (query-respoonse pair) for SESS.
+
+If such a session already exists, the saved conversation will be loaded and the new exchange will be appended.
+
+Without a session argument, the exchange also gets stored in a session named `last`; however, subsequent sessionless invocation will overwrite the content of `last`. (You can continue a conversation that was started as a sessionless exchange by passing `-S last`, but `last` won't be a safe space for keeping a conversation, as the next sessionless invocation will clear it again.) The `-l` option is provided as a shorthand for `-S last`.
+
+If you specify a session without a query:
+
+```bash
+chatblade -S SESS
+```
+
+chatblade will recall the conversation without modifying the session.
+
+Note: if you have cached messages from chatblade before introducing sessions, they will be converted to the given session  on first start of session-capable chatblade (in this situation not specifying a session or specifying `last` is not accepted). If you don't want bother with keeping these messages, you can delete the cache file manually.
 
 #### Picking between gpt-3.5 and 4
 
