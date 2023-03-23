@@ -77,11 +77,11 @@ https://user-images.githubusercontent.com/452020/226891636-54d12df2-528f-4365-a4
 
 ### Formatting the results
 
-Responses that come back are always shown as markdown. Sometimes this may not be what you want, as it removes new lines, or because you are only interested in extracting a part of the result to pipe to another command.
+Responses are parsed and if chatblade thinks its markdown it will be presented as such, to get syntax highlighting. But sometimes this may not be what you want, as it removes new lines, or because you are only interested in extracting a part of the result to pipe to another command.
 
 In that case you have 2 options:
-- `-r` for raw, which just prints the text as ChatGPT returned it, and doesn't pass it through markdown.
-- `-e` for extract, which will try to detect what was returned (either a code block or json) and extract only that part.
+- `-r` for raw, which just prints the text exactly as ChatGPT returned it, and doesn't pass it through markdown.
+- `-e` for extract, which will try to detect what was returned (either a code block or json) and extract only that part. If neither of those are found it does the same as `-r`
 
 Both options can be used either with a new query, e.g. 
 
