@@ -140,7 +140,7 @@ This won't perform any action over the wire, and just calculates the tokens loca
 
 We can also save commonly used prompts. Any file we place under ~/.config/chatblade/ will be picked up by the command.
 
-So for example, given the following yaml called `~/.config/chatblade/etymology.yaml`, which contains:
+So for example, given the following file `~/.config/chatblade/etymology`, which contains:
 
 ```
 I want you to act as a professional Etymologist and Quiz Generator. You have a deep knowledge of etymology and will be provided with a word. 
