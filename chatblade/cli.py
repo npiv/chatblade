@@ -2,10 +2,12 @@ import sys
 import types
 
 import rich
+import os
 from rich.prompt import Prompt
 from rich.live import Live
 from rich.text import Text
 
+import openai
 from . import printer, chat, utils, storage, errors, parser
 
 
@@ -77,6 +79,11 @@ def handle_input(query, params):
 
 def cli():
     query, params = parser.parse(sys.argv[1:])
+    if "OPENAI_API_ENDPOINT" in os.environ:
+        openai.api_base = os.environ["OPENAI_API_ENDPOINT"]
+        if "microsoft.com" in os.environ["OPENAI_API_ENDPOINT"]:
+            openai.api_type = "azure"
+            openai.api_version = "2023-03-15-preview"
     if params.debug:
         utils.CONSOLE_DEBUG_LOGGING = True
     try:

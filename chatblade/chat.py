@@ -3,6 +3,7 @@ import types
 import tiktoken
 import openai
 import openai.error
+import os
 
 from . import utils, errors
 
@@ -11,7 +12,6 @@ CostConfig = collections.namedtuple("CostConfig", "name prompt_cost completion_c
 CostCalculation = collections.namedtuple("CostCalculation", "name tokens cost")
 
 costs = [CostConfig("gpt-3.5", 0.002, 0.002), CostConfig("gpt-4", 0.03, 0.06)]
-
 
 def get_tokens_and_costs(messages):
     return [
@@ -84,6 +84,8 @@ def query_chat_gpt(messages, config):
     openai.api_key = config["openai_api_key"]
     config = utils.merge_dicts(DEFAULT_OPENAI_SETTINGS, config)
     dict_messages = [msg._asdict() for msg in messages]
+    if "OPENAI_API_AZURE_ENGINE" in os.environ:
+        config['engine'] = os.environ["OPENAI_API_AZURE_ENGINE"]
     try:
         result = openai.ChatCompletion.create(messages=dict_messages, **config)
         if isinstance(result, types.GeneratorType):
