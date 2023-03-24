@@ -55,7 +55,10 @@ def load_prompt_file(prompt_name):
             return f.read()
     except FileNotFoundError:
         # fallback
-        return load_prompt_config_legacy_yaml(prompt_name)
+        try:
+            return load_prompt_config_legacy_yaml(prompt_name)
+        except:
+            raise errors.ChatbladeError(f"Prompt {prompt_name} not found in {path}")
 
 
 def load_prompt_config_legacy_yaml(prompt_name):
