@@ -13,6 +13,7 @@ CostCalculation = collections.namedtuple("CostCalculation", "name tokens cost")
 
 costs = [CostConfig("gpt-3.5", 0.002, 0.002), CostConfig("gpt-4", 0.03, 0.06)]
 
+
 def get_tokens_and_costs(messages):
     return [
         CostCalculation(
@@ -79,13 +80,27 @@ def map_single(result):
     return Message(response_message["role"], response_message["content"])
 
 
+def set_azure_if_present(config):
+    """checks if azure settings present and sets them"""
+    if "OPENAI_API_ENDPOINT" in os.environ:
+        openai.api_base = os.environ["OPENAI_API_ENDPOINT"]
+        if "microsoft.com" in os.environ["OPENAI_API_ENDPOINT"]:
+            openai.api_type = "azure"
+            openai.api_version = "2023-03-15-preview"
+        else:
+            raise errors.ChatbladeError(
+                "Unknown opeanai endpoint. Currently only azure is supported"
+            )
+    if "OPENAI_API_AZURE_ENGINE" in os.environ:
+        config["engine"] = os.environ["OPENAI_API_AZURE_ENGINE"]
+
+
 def query_chat_gpt(messages, config):
     """Queries the chat GPT API with the given messages and config."""
     openai.api_key = config["openai_api_key"]
     config = utils.merge_dicts(DEFAULT_OPENAI_SETTINGS, config)
+    set_azure_if_present(config)
     dict_messages = [msg._asdict() for msg in messages]
-    if "OPENAI_API_AZURE_ENGINE" in os.environ:
-        config['engine'] = os.environ["OPENAI_API_AZURE_ENGINE"]
     try:
         result = openai.ChatCompletion.create(messages=dict_messages, **config)
         if isinstance(result, types.GeneratorType):
