@@ -186,7 +186,7 @@ chatblade can be used with an Azure OpenAI endpoint, in which case in addition t
 - `OPENAI_API_ENDPOINT` :: URL to your cognitive services endpoint, e.g. `https://eastus.api.cognitive.microsoft.com/`
 - `OPENAI_API_AZURE_ENGINE` :: name of your deployment in Azure, eg `my-gpt-35-turbo` (maps to a specific model)
 
-Not that this will override any option for `-c 3.5` or `-c 4` which don't make sense in this case.
+*Note*: that this will override any option for `-c 3.5` or `-c 4` which don't make sense in this case.
 
 ### Help
 
