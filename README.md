@@ -7,13 +7,6 @@ Chatblade is a versatile command-line interface (CLI) tool designed to interact 
 
 You can do that by either passing `--openai-api-key KEY` or by setting an env variable `OPENAI_API_KEY` (recommended). The examples below all assume an env variable is set.
 
-### Configuring for Azure OpenAI
-
-When using an Azure OpenAI endpoint, in addition to `OPENAI_API_KEY` you'll need to set the environment variables:
-
-- `OPENAI_API_ENDPOINT` :: URL to your cognitive services endpoint, e.g. `https://eastus.api.cognitive.microsoft.com/`
-- `OPENAI_API_AZURE_ENGINE` :: name of your deployment in Azure, eg `my-gpt-35-turbo` (maps to a specific model)
-
 ## Install
 
 ### Latest and greatest
@@ -185,6 +178,15 @@ And since we asked for JSON, we can pipe our result to something else, e.g.:
 ```bash
 chatblade -l -e > toanki
 ```
+
+### Configuring for Azure OpenAI
+
+chatblade can be used with an Azure OpenAI endpoint, in which case in addition to the `OPENAI_API_KEY` you'll need to set the following environment variables:
+
+- `OPENAI_API_ENDPOINT` :: URL to your cognitive services endpoint, e.g. `https://eastus.api.cognitive.microsoft.com/`
+- `OPENAI_API_AZURE_ENGINE` :: name of your deployment in Azure, eg `my-gpt-35-turbo` (maps to a specific model)
+
+Not that this will override any option for `-c 3.5` or `-c 4` which don't make sense in this case.
 
 ### Help
 
