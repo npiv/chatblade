@@ -7,6 +7,13 @@ Chatblade is a versatile command-line interface (CLI) tool designed to interact 
 
 You can do that by either passing `--openai-api-key KEY` or by setting an env variable `OPENAI_API_KEY` (recommended). The examples below all assume an env variable is set.
 
+### Configuring for Azure OpenAI
+
+When using an Azure OpenAI endpoint, in addition to `OPENAI_API_KEY` you'll need to set the environment variables:
+
+- `OPENAI_API_ENDPOINT` :: URL to your cognitive services endpoint, e.g. `https://eastus.api.cognitive.microsoft.com/`
+- `OPENAI_API_AZURE_ENGINE` :: name of your deployment in Azure, eg `my-gpt-35-turbo` (maps to a specific model)
+
 ## Install
 
 ### Latest and greatest
@@ -21,7 +28,7 @@ The last released version can be installed with `pip install chatblade --upgrade
 
 ### via Brew tap (slow...)
 
-Offical Homebrew acceptance is pending, in the meantime you can use this brew tap: 
+Offical Homebrew acceptance is pending, in the meantime you can use this brew tap:
 ```
 brew tap npiv/chatblade
 brew install chatblade
@@ -68,7 +75,7 @@ If you would prefer to chat interactively instead just use `chatblade -i`.
 
 #### Show streaming text (experimental)
 
-You can also stream the responses, just like in the webui. At the end of the stream it will format the result. This can be combined in an interactive session 
+You can also stream the responses, just like in the webui. At the end of the stream it will format the result. This can be combined in an interactive session
 
 ```chatblade -s -i```
 
@@ -83,7 +90,7 @@ In that case you have 2 options:
 - `-r` for raw, which just prints the text exactly as ChatGPT returned it, and doesn't pass it through markdown.
 - `-e` for extract, which will try to detect what was returned (either a code block or json) and extract only that part. If neither of those are found it does the same as `-r`
 
-Both options can be used either with a new query, e.g. 
+Both options can be used either with a new query, e.g.
 
 ```bash
 chatblade -e write me a python boilerplate script that starts a server and prints hello world > main.py
@@ -104,11 +111,11 @@ e.g.
 curl https://news.ycombinator.com/rss | chatblade given the above rss can you show me the top 3 articles about AI and their links -c 4
 ```
 
-The piped input is placed above the query and sent to ChatGPT. 
+The piped input is placed above the query and sent to ChatGPT.
 
 <img src="assets/example3.png">
 
-or 
+or
 
 ```bash
 chatblade what does this script do < script.sh
@@ -143,7 +150,7 @@ We can also save commonly used prompts. Any file we place under ~/.config/chatbl
 So for example, given the following file `~/.config/chatblade/etymology`, which contains:
 
 ```
-I want you to act as a professional Etymologist and Quiz Generator. You have a deep knowledge of etymology and will be provided with a word. 
+I want you to act as a professional Etymologist and Quiz Generator. You have a deep knowledge of etymology and will be provided with a word.
 The goal is to create cards that quiz on both the etymology and finding the word by its definition.
 
 The following is what a perfect answer would look like for the word "disparage":
@@ -160,7 +167,7 @@ The following is what a perfect answer would look like for the word "disparage":
 You will return answers in JSON only. Answer truthfully and if you don't know then say so. Keep questions as close as possible to the
 provided examples. Make sure to include an example in the definition question. Use HTML within the strings to nicely format your answers.
 
-If multiple words are provided, create questions and answers for each of them in one list. 
+If multiple words are provided, create questions and answers for each of them in one list.
 
 Only answer in JSON, don't provide any more text. Valid JSON uses "" quotes to wrap its items.
 ```
