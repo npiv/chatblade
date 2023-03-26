@@ -7,10 +7,16 @@ import os
 import platformdirs
 import pickle
 import yaml
+import random
+import string
 
 from . import errors
 
 APP_NAME = "chatblade"
+
+
+def make_postfix():
+    return "." + "".join(random.choices(string.ascii_letters + string.digits, k=10))
 
 
 def get_cache_file_path():
@@ -30,8 +36,11 @@ def get_cache_file_path():
 
 def to_cache(messages):
     """cache the current messages state"""
-    with open(get_cache_file_path(), "wb") as f:
+    file_path = get_cache_file_path()
+    file_path_tmp = file_path + make_postfix()
+    with open(file_path_tmp, "wb") as f:
         pickle.dump(messages, f)
+    os.rename(file_path_tmp, file_path)
 
 
 def messages_from_cache():
