@@ -10,7 +10,7 @@ import yaml
 import random
 import string
 
-from . import errors
+from . import errors, chat
 
 APP_NAME = "chatblade"
 
@@ -39,22 +39,22 @@ def to_cache(messages, session):
     cdir = get_cache_path()
     if not os.path.exists(cdir):
         os.makedirs(cdir)
-    file_path = os.path.join(cdir, session)
+    file_path = os.path.join(cdir, f"{session}.yaml")
     file_path_tmp = file_path + make_postfix()
-    with open(file_path_tmp, "wb") as f:
-        pickle.dump(messages, f)
+    with open(file_path_tmp, "w") as f:
+        yaml.dump(messages, f)
     os.rename(file_path_tmp, file_path)
 
 
 def messages_from_cache(session):
     """load messages from session
     Return empty list if not exists"""
-    file_path = os.path.join(get_cache_path(), session)
+    file_path = os.path.join(get_cache_path(), f"{session}.yaml")
     if not os.path.exists(file_path):
         return []
     else:
-        with open(file_path, "rb") as f:
-            return pickle.load(f)
+        with open(file_path, "r") as f:
+            return [chat.Message.import_yaml(m) for m in yaml.load(f, yaml.SafeLoader)]
 
 
 def messages_from_cache_legacy():
