@@ -53,6 +53,15 @@ def valid_session(sess):
         raise argparse.ArgumentTypeError(f"invalid session name {sess}")
 
 
+class RenameAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        namespace.session_op = "rename"
+        try:
+            namespace.rename_to = valid_session(values[0])
+        except argparse.ArgumentTypeError as e:
+            raise argparse.ArgumentError(self, f"target: {e}")
+
+
 def parse(args):
     parser = argparse.ArgumentParser(
         "Chatblade", description="a CLI Swiss Army Knife for ChatGPT"
@@ -128,6 +137,43 @@ def parse(args):
         "--tokens",
         help="display what *would* be sent, how many tokens, and estimated costs",
         action="store_true",
+    )
+
+    # ------ Session Ops
+    parser.add_argument(
+        "--session-list",
+        dest="session_op",
+        action="store_const",
+        const="list",
+        help="list sessions",
+    )
+    parser.add_argument(
+        "--session-path",
+        dest="session_op",
+        action="store_const",
+        const="path",
+        help="show path to session file",
+    )
+    parser.add_argument(
+        "--session-dump",
+        dest="session_op",
+        action="store_const",
+        const="dump",
+        help="dump session to stdout",
+    )
+    parser.add_argument(
+        "--session-delete",
+        dest="session_op",
+        action="store_const",
+        const="delete",
+        help="delete session",
+    )
+    parser.add_argument(
+        "--session-rename",
+        metavar="newsess",
+        action=RenameAction,
+        nargs=1,
+        help="rename session",
     )
     parser.add_argument(
         "-n",

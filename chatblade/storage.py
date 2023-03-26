@@ -19,7 +19,7 @@ def make_postfix():
     return "." + "".join(random.choices(string.ascii_letters + string.digits, k=10))
 
 
-def get_cache_path():
+def get_cache_path(create=True):
     """
     if ~/.cache is availabe always use ~/.cache/chatblade as the cachefile
     otherwise fallback to the platform recommended location and create the directory
@@ -31,15 +31,25 @@ def get_cache_path():
         if not os.path.exists(os_cache_path):
             os.makedirs(os_cache_path)
 
-    return os.path.join(os_cache_path, APP_NAME)
+    cache_path = os.path.join(os_cache_path, APP_NAME)
+    if create and not os.path.exists(cache_path):
+            os.makedirs(cache_path)
+
+    return cache_path
+
+
+def get_session_path(session, exists=False):
+    """get the path of a session file
+    If exists=True, return None if the path does not exists"""
+    session_path = os.path.join(get_cache_path(), f"{session}.yaml")
+    if exists and not os.path.exists(session_path):
+        return
+    return session_path
 
 
 def to_cache(messages, session):
     """cache the current messages state"""
-    cdir = get_cache_path()
-    if not os.path.exists(cdir):
-        os.makedirs(cdir)
-    file_path = os.path.join(cdir, f"{session}.yaml")
+    file_path = get_session_path(session)
     file_path_tmp = file_path + make_postfix()
     with open(file_path_tmp, "w") as f:
         yaml.dump(messages, f)
@@ -49,7 +59,7 @@ def to_cache(messages, session):
 def messages_from_cache(session):
     """load messages from session
     Return empty list if not exists"""
-    file_path = os.path.join(get_cache_path(), f"{session}.yaml")
+    file_path = get_session_path(session)
     if not os.path.exists(file_path):
         return []
     else:
@@ -59,7 +69,7 @@ def messages_from_cache(session):
 
 def messages_from_cache_legacy():
     """load messages from last state or ChatbladeError if not exists"""
-    file_path = get_cache_path()
+    file_path = get_cache_path(False)
     if not os.path.exists(file_path):
         raise errors.ChatbladeError("No last state cached from which to begin")
     else:
@@ -69,7 +79,7 @@ def messages_from_cache_legacy():
 
 def migrate_to_session(session):
     """save pre-session last messages to session"""
-    file_path = get_cache_path()
+    file_path = get_cache_path(False)
     messages = messages_from_cache_legacy()
     file_path_tmp = file_path + make_postfix()
     # resolve name conflict, but keep old cache file

@@ -7,7 +7,7 @@ from rich.prompt import Prompt
 from rich.live import Live
 from rich.text import Text
 
-from . import printer, chat, utils, storage, errors, parser
+from . import printer, chat, utils, storage, errors, parser, session
 
 
 def fetch_and_cache(messages, params):
@@ -83,6 +83,39 @@ def handle_input(query, params):
         start_repl(messages, params)
 
 
+def do_session_op(sess, op, rename_to):
+    if op == "list":
+        print(*session.list_sessions(), sep="\n")
+        return 0
+
+    err = None
+    if not sess:
+        err = "session name required"
+    elif op == "path" or op == "dump":
+        sess_path = storage.get_session_path(sess, True)
+        if sess_path:
+            if op == "path":
+                data = sess_path
+            else:
+                with open(sess_path, "r") as f:
+                    data = f.read()
+            print(data)
+        else:
+            err = "session does not exist"
+    elif op == "delete":
+        err = session.delete_session(sess)
+    elif op == "rename":
+        err = session.rename_session(sess, rename_to)
+    else:
+        raise ValueError(f"unknown session operation: {op}")
+
+    if err:
+        printer.warn(err)
+        return 1
+
+    return 0
+
+
 def migrate_old_cahe_file(session):
     cache_path = storage.get_cache_path()
     if os.path.isfile(cache_path):
@@ -107,6 +140,9 @@ def cli():
     migrate_res = migrate_old_cahe_file(params.session)
     if migrate_res is not None:
         exit(migrate_res)
+    if params.session_op:
+        ret = do_session_op(params.session, params.session_op, params.rename_to)
+        exit(ret)
     if params.debug:
         utils.CONSOLE_DEBUG_LOGGING = True
     try:

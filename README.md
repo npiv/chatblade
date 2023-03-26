@@ -66,6 +66,8 @@ chatblade -S SESS
 
 chatblade will recall the conversation without modifying the session.
 
+chatblade supports varios operations on sessions. It provides the `--session-OP` options, where `OP` can be `list`, `path`, `dump`, `delete`, `rename`.
+
 Note: if you have cached messages from chatblade before introducing sessions, they will be converted to the given session  on first start of session-capable chatblade (in this situation not specifying a session or specifying `last` is not accepted). If you don't want bother with keeping these messages, you can delete the cache file manually.
 
 #### Picking between gpt-3.5 and 4
