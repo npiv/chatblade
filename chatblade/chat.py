@@ -81,19 +81,14 @@ def map_single(result):
 
 
 def set_azure_if_present(config):
-    """checks if azure settings present and sets them"""
-    if "OPENAI_API_ENDPOINT" in os.environ:
-        openai.api_base = os.environ["OPENAI_API_ENDPOINT"]
-        if "microsoft.com" in os.environ["OPENAI_API_ENDPOINT"]:
-            openai.api_type = "azure"
-            openai.api_version = "2023-03-15-preview"
-        else:
-            raise errors.ChatbladeError(
-                "Unknown opeanai endpoint. Currently only azure is supported"
-            )
+    """checks if azure settings present and sets endpoint config."""
+    if os.environ.get("OPENAI_API_TYPE", "open_ai") in ("azure", "azure_ad", "azuread"):
+        # this is a workaround that can be removed once https://github.com/openai/openai-python/pull/335
+        # is in the openai version that chatblade uses
+        openai.api_version = "2023-03-15-preview"
+
     if "OPENAI_API_AZURE_ENGINE" in os.environ:
         config["engine"] = os.environ["OPENAI_API_AZURE_ENGINE"]
-
 
 def query_chat_gpt(messages, config):
     """Queries the chat GPT API with the given messages and config."""
