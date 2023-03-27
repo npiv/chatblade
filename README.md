@@ -179,6 +179,12 @@ And since we asked for JSON, we can pipe our result to something else, e.g.:
 chatblade -l -e > toanki
 ```
 
+### Configuring for OpenAI API Proxy
+
+If you have set up a proxy server for the OpenAI API at `https://api.example.com`, you'll need to set the following environment variables:
+
+- `OPENAI_API_ENDPOINT` :: URL to your cognitive services endpoint with version path, e.g. `https://api.example.com/v1`
+
 ### Configuring for Azure OpenAI
 
 chatblade can be used with an Azure OpenAI endpoint, in which case in addition to the `OPENAI_API_KEY` you'll need to set the following environment variables:
