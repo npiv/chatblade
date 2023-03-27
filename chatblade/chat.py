@@ -87,10 +87,6 @@ def set_azure_if_present(config):
         if "microsoft.com" in os.environ["OPENAI_API_ENDPOINT"]:
             openai.api_type = "azure"
             openai.api_version = "2023-03-15-preview"
-        else:
-            raise errors.ChatbladeError(
-                "Unknown opeanai endpoint. Currently only azure is supported"
-            )
     if "OPENAI_API_AZURE_ENGINE" in os.environ:
         config["engine"] = os.environ["OPENAI_API_AZURE_ENGINE"]
 
