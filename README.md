@@ -21,7 +21,7 @@ The last released version can be installed with `pip install chatblade --upgrade
 
 ### via Brew tap (slow...)
 
-Offical Homebrew acceptance is pending, in the meantime you can use this brew tap:
+Official Homebrew acceptance is pending, in the meantime you can use this brew tap:
 ```
 brew tap npiv/chatblade
 brew install chatblade
