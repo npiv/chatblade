@@ -204,7 +204,9 @@ chatblade can be used with an Azure OpenAI endpoint, in which case in addition t
 ### Help
 
 ```
-usage: Chatblade [-h] [-l] [-p P] [--openai-api-key KEY] [--temperature T] [-c {3.5,4}] [-i] [-s] [-e] [-r] [-t] [query ...]
+usage: Chatblade [-h] [-S sess] [-l] [-p name] [--openai-api-key key] [--temperature t] [-c {3.5,4}] [-i] [-s] [-e] [-r] [-t]
+                 [--session-list] [--session-path] [--session-dump] [--session-delete] [--session-rename newsess] [-n] [-o]
+                 [query ...]
 
 a CLI Swiss Army Knife for ChatGPT
 
@@ -213,16 +215,26 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -l, --last            display the last result. If a query is given the conversation is continued
-  -p P, --prompt-file P
-                        prompt name - will load the prompt at ~/.config/chatblade/P
-  --openai-api-key KEY  the OpenAI API key can also be set as env variable OPENAI_API_KEY
-  --temperature T       temperature (openai setting)
+  -S sess, --session sess
+                        initiate or continue session
+  -l, --last            alias for '-S last'
+  -p name, --prompt-file name
+                        prompt name - will load the prompt at ~/.config/chatblade/name as system msg
+  --openai-api-key key  the OpenAI API key can also be set as env variable OPENAI_API_KEY
+  --temperature t       temperature (openai setting)
   -c {3.5,4}, --chat-gpt {3.5,4}
                         chat GPT model
   -i, --interactive     start an interactive chat session. This will implicitly continue the conversation
   -s, --stream          Stream the incoming text to the terminal
   -e, --extract         extract content from response if possible (either json or code block)
-  -r, --raw             print the last response as pure text, don't pretty print or format
+  -r, --raw             print session as pure text, don't pretty print or format
   -t, --tokens          display what *would* be sent, how many tokens, and estimated costs
+  --session-list        list sessions
+  --session-path        show path to session file
+  --session-dump        dump session to stdout
+  --session-delete      delete session
+  --session-rename newsess
+                        rename session
+  -n, --no-format       do not add pretty print formatting to output
+  -o, --only            Only display the response, omit query
 ```
