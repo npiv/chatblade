@@ -76,8 +76,12 @@ def handle_input(query, params):
     elif params.interactive:
         pass
     else:
-        printer.warn("no query or option given. nothing to do...")
-        exit()
+        if params.session:
+          printer.warn(f"session {params.session} does not exist, query is needed to initialize it")
+          exit(1)
+        else:
+          printer.warn("no query or option given. nothing to do...")
+          exit(0)
 
     if params.interactive:
         start_repl(messages, params)
@@ -149,3 +153,4 @@ def cli():
         handle_input(query, params)
     except errors.ChatbladeError as e:
         printer.warn(e)
+        exit(1)
