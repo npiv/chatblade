@@ -114,6 +114,12 @@ def parse(args):
         help="display what *would* be sent, how many tokens, and estimated costs",
         action="store_true",
     )
+    parser.add_argument(
+        "--directory",
+        metavar="d",
+        type=str,
+        help="Set the chatblade cache location (default ~/.cache/chatblade, ~/Library/Caches/chatblade on osx)",
+    )
 
     # --- debug
     parser.add_argument("--debug", action="store_true", help=argparse.SUPPRESS)

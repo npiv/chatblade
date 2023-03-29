@@ -22,7 +22,7 @@ def fetch_and_cache(messages, params):
     else:
         response_msg = chat.query_chat_gpt(messages, params)
     messages.append(response_msg)
-    storage.to_cache(messages)
+    storage.to_cache(messages, params)
     return messages
 
 
