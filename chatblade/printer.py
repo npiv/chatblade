@@ -18,7 +18,10 @@ def warn(msg):
 
 
 def print_tokens(messages, token_stats, args):
-    args.roles = ["user", "assistant", "system"]
+    if args.only:
+      args.roles = ["assistant"]
+    else:
+      args.roles = ["user", "assistant", "system"]
     print_messages(messages, args)
     console.print()
     table = Table(title="tokens/costs")
@@ -39,6 +42,9 @@ def print_tokens(messages, token_stats, args):
 
 def print_messages(messages, args):
     if "roles" not in args:
+      if args.only:
+        args.roles = ["assistant"]
+      else:
         args.roles = ["user", "assistant"]
     if args.extract:
         extract_messages(messages, args)
