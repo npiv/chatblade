@@ -120,6 +120,12 @@ def parse(args):
         help="do not add pretty print formatting to output",
         action="store_true",
     )
+    parser.add_argument(
+        "-o",
+        "--only",
+        help="Only display the response, omit query",
+        action="store_true",
+    )
 
     # --- debug
     parser.add_argument("--debug", action="store_true", help=argparse.SUPPRESS)
