@@ -114,6 +114,12 @@ def parse(args):
         help="display what *would* be sent, how many tokens, and estimated costs",
         action="store_true",
     )
+    parser.add_argument(
+        "-o",
+        "--only",
+        help="Only display the response, omit query",
+        action="store_true",
+    )
 
     # --- debug
     parser.add_argument("--debug", action="store_true", help=argparse.SUPPRESS)
