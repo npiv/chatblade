@@ -115,6 +115,12 @@ def parse(args):
         action="store_true",
     )
     parser.add_argument(
+        "-n",
+        "--no-format",
+        help="do not add pretty print formatting to output",
+        action="store_true",
+    )
+    parser.add_argument(
         "-o",
         "--only",
         help="Only display the response, omit query",
