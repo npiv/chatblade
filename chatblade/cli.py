@@ -63,6 +63,9 @@ def handle_input(query, params):
         printer.warn("no query or option given. nothing to do...")
         exit()
 
+    if type(params.directory) == type(None):
+      del params["directory"]
+
     if params.tokens:
         token_prices = chat.get_tokens_and_costs(messages)
         printer.print_tokens(messages, token_prices, params)
