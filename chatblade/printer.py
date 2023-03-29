@@ -57,14 +57,16 @@ def print_message(message, args):
         printable = detect_and_format_message(
             message.content, cutoff=1000 if message.role == "user" else None
         )
-    console.print(Rule(message.role, style=COLORS[message.role]))
+    if not args.no_format:
+      console.print(Rule(message.role, style=COLORS[message.role]))
 
     if args.raw:
         print(message.content)
     else:
         console.print(printable)
 
-    console.print(Rule(style=COLORS[message.role]))
+    if not args.no_format:
+      console.print(Rule(style=COLORS[message.role]))
 
 
 def extract_messages(messages, args):

@@ -114,6 +114,12 @@ def parse(args):
         help="display what *would* be sent, how many tokens, and estimated costs",
         action="store_true",
     )
+    parser.add_argument(
+        "-n",
+        "--no-format",
+        help="do not add pretty print formatting to output",
+        action="store_true",
+    )
 
     # --- debug
     parser.add_argument("--debug", action="store_true", help=argparse.SUPPRESS)
