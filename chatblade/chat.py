@@ -11,7 +11,7 @@ Message = collections.namedtuple("Message", ["role", "content"])
 CostConfig = collections.namedtuple("CostConfig", "name prompt_cost completion_cost")
 CostCalculation = collections.namedtuple("CostCalculation", "name tokens cost")
 
-costs = [CostConfig("gpt-3.5", 0.002, 0.002), CostConfig("gpt-4", 0.03, 0.06)]
+costs = [CostConfig("gpt-3.5-turbo", 0.002, 0.002), CostConfig("gpt-4", 0.03, 0.06)]
 
 
 def get_tokens_and_costs(messages):
@@ -26,7 +26,7 @@ def get_tokens_and_costs(messages):
 def num_tokens_in_messages(messages, cost_config):
     """Returns the number of tokens used by a list of messages."""
     try:
-        encoding = tiktoken.encoding_for_model(cost_config.name)
+        encoding = tiktoken.encoding_for_model(f"{cost_config.name}-0301")
     except KeyError:
         encoding = tiktoken.get_encoding("cl100k_base")
     num_tokens = 0
@@ -89,6 +89,7 @@ def set_azure_if_present(config):
 
     if "OPENAI_API_AZURE_ENGINE" in os.environ:
         config["engine"] = os.environ["OPENAI_API_AZURE_ENGINE"]
+
 
 def query_chat_gpt(messages, config):
     """Queries the chat GPT API with the given messages and config."""
