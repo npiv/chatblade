@@ -13,13 +13,19 @@ from . import errors
 APP_NAME = "chatblade"
 
 
-def get_cache_file_path():
+def get_cache_file_path(args):
     """
     if ~/.cache is availabe always use ~/.cache/chatblade as the cachefile
     otherwise fallback to the platform recommended location and create the directory
     e.g. ~/Library/Caches/chatblade on osx
     """
-    cache_path = os.path.expanduser("~/.cache")
+    if "directory" not in args:
+      cache_path = os.path.expanduser("~/.cache")
+    else:
+      cache_path = os.path.expanduser(args.directory)
+      if not os.path.exists(cache_path):
+        os.makedirs(cache_path)
+
     if not os.path.exists(cache_path):
         cache_path = platformdirs.user_cache_dir(APP_NAME)
         if not os.path.exists(cache_path):
@@ -28,15 +34,15 @@ def get_cache_file_path():
     return os.path.join(cache_path, APP_NAME)
 
 
-def to_cache(messages):
+def to_cache(messages, args):
     """cache the current messages state"""
-    with open(get_cache_file_path(), "wb") as f:
+    with open(get_cache_file_path(args), "wb") as f:
         pickle.dump(messages, f)
 
 
-def messages_from_cache():
+def messages_from_cache(args):
     """load messages from last state or ChatbladeError if not exists"""
-    file_path = get_cache_file_path()
+    file_path = get_cache_file_path(args)
     if not os.path.exists(file_path):
         raise errors.ChatbladeError("No last state cached from which to begin")
     else:

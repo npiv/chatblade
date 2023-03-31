@@ -94,6 +94,12 @@ def parse(args):
         help="Stream the incoming text to the terminal",
         action="store_true",
     )
+    parser.add_argument(
+        "--directory",
+        metavar="d",
+        type=str,
+        help="Set the chatblade cache location (default ~/.cache/chatblade, ~/Library/Caches/chatblade on osx)",
+    )
 
     # ------ Display Options
     parser.add_argument(

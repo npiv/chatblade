@@ -22,7 +22,7 @@ def fetch_and_cache(messages, params):
     else:
         response_msg = chat.query_chat_gpt(messages, params)
     messages.append(response_msg)
-    storage.to_cache(messages)
+    storage.to_cache(messages, params)
     return messages
 
 
@@ -49,7 +49,7 @@ def handle_input(query, params):
     utils.debug(title="cli input", query=query, params=params)
 
     if params.last:
-        messages = storage.messages_from_cache()
+        messages = storage.messages_from_cache(params)
         if query:  # continue conversation
             messages.append(chat.Message("user", query))
     elif params.prompt_file:
@@ -62,6 +62,9 @@ def handle_input(query, params):
     else:
         printer.warn("no query or option given. nothing to do...")
         exit()
+
+    if type(params.directory) == type(None):
+      del params["directory"]
 
     if params.tokens:
         token_prices = chat.get_tokens_and_costs(messages)
