@@ -40,9 +40,9 @@ def to_cache(messages, args):
         pickle.dump(messages, f)
 
 
-def messages_from_cache():
+def messages_from_cache(args):
     """load messages from last state or ChatbladeError if not exists"""
-    file_path = get_cache_file_path()
+    file_path = get_cache_file_path(args)
     if not os.path.exists(file_path):
         raise errors.ChatbladeError("No last state cached from which to begin")
     else:

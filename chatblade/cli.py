@@ -49,7 +49,7 @@ def handle_input(query, params):
     utils.debug(title="cli input", query=query, params=params)
 
     if params.last:
-        messages = storage.messages_from_cache()
+        messages = storage.messages_from_cache(params)
         if query:  # continue conversation
             messages.append(chat.Message("user", query))
     elif params.prompt_file:
