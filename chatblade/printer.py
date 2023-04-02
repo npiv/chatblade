@@ -1,5 +1,6 @@
 import json
 import re
+import sys
 import rich
 from rich.console import Console
 from rich.json import JSON
@@ -14,7 +15,7 @@ console = Console()
 
 
 def warn(msg):
-    rich.print(f"[red]{msg}[/red]")
+    rich.print(f"[red]{msg}[/red]", file=sys.stderr)
 
 
 def print_tokens(messages, token_stats, args):

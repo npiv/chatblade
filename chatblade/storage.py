@@ -7,41 +7,86 @@ import os
 import platformdirs
 import pickle
 import yaml
+import random
+import string
 
-from . import errors
+from . import errors, chat
 
 APP_NAME = "chatblade"
 
 
-def get_cache_file_path():
+def make_postfix():
+    return "." + "".join(random.choices(string.ascii_letters + string.digits, k=10))
+
+
+def get_cache_path(create=True):
     """
     if ~/.cache is availabe always use ~/.cache/chatblade as the cachefile
     otherwise fallback to the platform recommended location and create the directory
     e.g. ~/Library/Caches/chatblade on osx
     """
-    cache_path = os.path.expanduser("~/.cache")
-    if not os.path.exists(cache_path):
-        cache_path = platformdirs.user_cache_dir(APP_NAME)
-        if not os.path.exists(cache_path):
+    os_cache_path = os.path.expanduser("~/.cache")
+    if not os.path.exists(os_cache_path):
+        os_cache_path = platformdirs.user_cache_dir(APP_NAME)
+        if not os.path.exists(os_cache_path):
+            os.makedirs(os_cache_path)
+
+    cache_path = os.path.join(os_cache_path, APP_NAME)
+    if create and not os.path.exists(cache_path):
             os.makedirs(cache_path)
 
-    return os.path.join(cache_path, APP_NAME)
+    return cache_path
 
 
-def to_cache(messages):
+def get_session_path(session, exists=False):
+    """get the path of a session file
+    If exists=True, return None if the path does not exists"""
+    session_path = os.path.join(get_cache_path(), f"{session}.yaml")
+    if exists and not os.path.exists(session_path):
+        return
+    return session_path
+
+
+def to_cache(messages, session):
     """cache the current messages state"""
-    with open(get_cache_file_path(), "wb") as f:
-        pickle.dump(messages, f)
+    file_path = get_session_path(session)
+    file_path_tmp = file_path + make_postfix()
+    with open(file_path_tmp, "w") as f:
+        yaml.dump(messages, f)
+    os.rename(file_path_tmp, file_path)
 
 
-def messages_from_cache():
+def messages_from_cache(session):
+    """load messages from session
+    Return empty list if not exists"""
+    file_path = get_session_path(session)
+    if not os.path.exists(file_path):
+        return []
+    else:
+        with open(file_path, "r") as f:
+            return [chat.Message.import_yaml(m) for m in yaml.load(f, yaml.SafeLoader)]
+
+
+def messages_from_cache_legacy():
     """load messages from last state or ChatbladeError if not exists"""
-    file_path = get_cache_file_path()
+    file_path = get_cache_path(False)
     if not os.path.exists(file_path):
         raise errors.ChatbladeError("No last state cached from which to begin")
     else:
         with open(file_path, "rb") as f:
             return pickle.load(f)
+
+
+def migrate_to_session(session):
+    """save pre-session last messages to session"""
+    file_path = get_cache_path(False)
+    messages = messages_from_cache_legacy()
+    file_path_tmp = file_path + make_postfix()
+    # resolve name conflict, but keep old cache file
+    # until all has gone through fine
+    os.rename(file_path, file_path_tmp)
+    to_cache(messages, session)
+    os.unlink(file_path_tmp)
 
 
 def load_prompt_file(prompt_name):

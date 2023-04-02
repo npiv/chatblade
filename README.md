@@ -40,11 +40,9 @@ chatblade how can I extract a still frame from a video at 22:01 with ffmpeg
 ```
 <img width="650" alt="image" src="https://user-images.githubusercontent.com/452020/226869260-1dcd4faf-521c-466b-998a-fd5cfdc5b3c7.png">
 
+#### recall the last conversation
 
-
-#### viewing the last conversation
-
-if you would like to view the last conversation just call it back with `-l`
+if you would like to revall the last conversation just call it back with `-l`
 
 ```bash
 chatblade -l
@@ -57,6 +55,9 @@ To continue the conversation and ask for a change within the context, you can ag
 ```bash
 chatblade -l can we make a gif instead from 00:22:01 to 00:22:04
 ```
+
+`-l` is shorthand for `-S last` or the last session. We can keep track of and continue various distinct conversations using the [session options](#session-options)
+
 
 #### Picking between gpt-3.5 and 4
 
@@ -121,6 +122,32 @@ piped input
 -------
 query
 ```
+
+#### Session Options
+
+Sessions are named conversations.
+
+If you start chatblade with a session name SESS of your choice:
+
+```bash
+chatblade -S SESS can we make a gif instead from 00:22:01 to 00:22:04
+```
+
+chatblade will create a session called SESS if it does not exist, and it will store the current exchange (query-response pair) for SESS.
+
+If such a session already exists, the saved conversation will be loaded and the new exchange will be appended.
+
+Without a session argument, the exchange also gets stored in a session named `last`; however, subsequent sessionless invocation will overwrite the content of `last`. (You can continue a conversation that was started as a sessionless exchange by passing `-S last`, but `last` won't be a safe space for keeping a conversation, as the next sessionless invocation will clear it again.) The `-l` option is provided as a shorthand for `-S last`.
+
+If you specify a session without a query:
+
+```bash
+chatblade -S SESS
+```
+
+chatblade will recall the conversation without modifying the session.
+
+chatblade supports various operations on sessions. It provides the `--session-OP` options, where `OP` can be `list`, `path`, `dump`, `delete`, `rename`.
 
 ### Checking token count and estimated costs
 
@@ -192,25 +219,37 @@ chatblade can be used with an Azure OpenAI endpoint, in which case in addition t
 ### Help
 
 ```
-usage: Chatblade [-h] [-l] [-p P] [--openai-api-key KEY] [--temperature T] [-c {3.5,4}] [-i] [-s] [-e] [-r] [-t] [query ...]
+usage: Chatblade [-h] [--openai-api-key key] [--temperature t] [-c {3.5,4}] [-i] [-s] [-t] [-p name] [-e] [-r] [-n] [-o] [-l] [-S sess] [--session-list] [--session-path]
+                 [--session-dump] [--session-delete] [--session-rename newsess]
+                 [query ...]
 
 a CLI Swiss Army Knife for ChatGPT
 
 positional arguments:
-  query                 Query to send to chat GPT
+  query                           Query to send to chat GPT
 
 options:
-  -h, --help            show this help message and exit
-  -l, --last            display the last result. If a query is given the conversation is continued
-  -p P, --prompt-file P
-                        prompt name - will load the prompt at ~/.config/chatblade/P
-  --openai-api-key KEY  the OpenAI API key can also be set as env variable OPENAI_API_KEY
-  --temperature T       temperature (openai setting)
-  -c {3.5,4}, --chat-gpt {3.5,4}
-                        chat GPT model
-  -i, --interactive     start an interactive chat session. This will implicitly continue the conversation
-  -s, --stream          Stream the incoming text to the terminal
-  -e, --extract         extract content from response if possible (either json or code block)
-  -r, --raw             print the last response as pure text, don't pretty print or format
-  -t, --tokens          display what *would* be sent, how many tokens, and estimated costs
+  -h, --help                      show this help message and exit
+  --openai-api-key key            the OpenAI API key can also be set as env variable OPENAI_API_KEY
+  --temperature t                 temperature (openai setting)
+  -c {3.5,4}, --chat-gpt {3.5,4}  chat GPT model
+  -i, --interactive               start an interactive chat session. This will implicitly continue the conversation
+  -s, --stream                    Stream the incoming text to the terminal
+  -t, --tokens                    display what *would* be sent, how many tokens, and estimated costs
+  -p name, --prompt-file name     prompt name - will load the prompt at ~/.config/chatblade/name as system msg
+
+result formatting options:
+  -e, --extract                   extract content from response if possible (either json or code block)
+  -r, --raw                       print session as pure text, don't pretty print or format
+  -n, --no-format                 do not add pretty print formatting to output
+  -o, --only                      Only display the response, omit query
+
+session options:
+  -l, --last                      alias for '-S last', the default session if none is specified
+  -S sess, --session sess         initiate or continue named session
+  --session-list                  list sessions
+  --session-path                  show path to session file
+  --session-dump                  dump session to stdout
+  --session-delete                delete session
+  --session-rename newsess        rename session
 ```

@@ -2,6 +2,8 @@ from rich.pretty import pprint
 
 CONSOLE_DEBUG_LOGGING = False
 
+scratch_session = "last"
+
 
 class DotDict(dict):
     """dot.notation access to dictionary attributes"""

@@ -4,10 +4,30 @@ import tiktoken
 import openai
 import openai.error
 import os
+import yaml
 
 from . import utils, errors
 
-Message = collections.namedtuple("Message", ["role", "content"])
+class Message(collections.namedtuple("Message", ["role", "content"])):
+
+    @staticmethod
+    def represent_for_yaml(dumper, msg):
+        val = []
+        md = msg._asdict()
+
+        for fie in msg._fields:
+            val.append([dumper.represent_data(e) for e in (fie, md[fie])])
+
+        return yaml.nodes.MappingNode("tag:yaml.org,2002:map", val)
+
+    @classmethod
+    def import_yaml(cls, seq):
+        """instantiate from YAML provided representation"""
+        return cls(**seq)
+
+yaml.add_representer(Message, Message.represent_for_yaml)
+
+
 CostConfig = collections.namedtuple("CostConfig", "name prompt_cost completion_cost")
 CostCalculation = collections.namedtuple("CostCalculation", "name tokens cost")
 
