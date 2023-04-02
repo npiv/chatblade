@@ -38,7 +38,12 @@ def start_repl(messages, params):
             exit()
 
         if not messages:
-            messages = chat.init_conversation(query)
+            init_msgs = (
+                [storage.load_prompt_file(params.prompt_file)]
+                if params.prompt_file
+                else []
+            )
+            messages = chat.init_conversation(query, *init_msgs)
         else:
             messages.append(chat.Message("user", query))
 
