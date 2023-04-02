@@ -2,13 +2,18 @@ import glob
 import re
 import os
 
-from . import storage, errors
+from . import storage
 
 
 def list_sessions():
     """List names of sessions"""
     sess_paths = glob.glob(os.path.join(storage.get_cache_path(), "*.yaml"))
-    return sorted([re.sub("\.yaml\Z", "", os.path.basename(sess_path)) for sess_path in sess_paths])
+    return sorted(
+        [
+            re.sub("\.yaml\Z", "", os.path.basename(sess_path))
+            for sess_path in sess_paths
+        ]
+    )
 
 
 def rename_session(session, newname):
