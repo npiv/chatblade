@@ -59,11 +59,13 @@ def handle_input(query, params):
         if query:  # continue conversation
             messages.append(chat.Message("user", query))
     else:
-        init_args = []
-        if params.prompt_file:
-            init_args.append(storage.load_prompt_file(params.prompt_file))
-        if query or init_args:
-            messages = chat.init_conversation(query, *init_args)
+        if query:
+            init_msgs = (
+                [storage.load_prompt_file(params.prompt_file)]
+                if params.prompt_file
+                else []
+            )
+            messages = chat.init_conversation(query, *init_msgs)
 
     if messages:
         if params.tokens:

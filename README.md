@@ -163,9 +163,11 @@ curl https://news.ycombinator.com/rss | chatblade given the above rss can you sh
 
 This won't perform any action over the wire, and just calculates the tokens locally.
 
-### Make custom prompts
+### Use custom prompts (the system msg)
 
-We can also save commonly used prompts. Any file we place under ~/.config/chatblade/ will be picked up by the command.
+The system message is used to instruct the model how to behave, see [OpenAI - Instructing Chat Models](https://platform.openai.com/docs/guides/chat/instructing-chat-models).
+
+These can be loaded with `-p`. For convenience any file we place under ~/.config/chatblade/ will be picked up by this command.
 
 So for example, given the following file `~/.config/chatblade/etymology`, which contains:
 
@@ -197,6 +199,8 @@ We can now run a command and refer to this prompt with `-p etymology`:
 ```bash
 chatblade -p etymology gregarious
 ```
+
+You can also point -p to a file path directly to load a system message from any arbitrary location
 
 <img src="assets/example5.png">
 

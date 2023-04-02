@@ -109,7 +109,7 @@ def parse(args):
         "--prompt-file",
         metavar="name",
         type=str,
-        help="prompt name - will load the prompt at ~/.config/chatblade/name as system msg",
+        help="prompt name - will load the prompt with that name at ~/.config/chatblade/name or a path to a file",
     )
 
     display_opts = parser.add_argument_group("result formatting options")

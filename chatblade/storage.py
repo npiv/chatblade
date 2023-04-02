@@ -33,7 +33,7 @@ def get_cache_path(create=True):
 
     cache_path = os.path.join(os_cache_path, APP_NAME)
     if create and not os.path.exists(cache_path):
-            os.makedirs(cache_path)
+        os.makedirs(cache_path)
 
     return cache_path
 
@@ -93,17 +93,24 @@ def load_prompt_file(prompt_name):
     """
     load a prompt configuration by its name
     Assumes the user created the ~/.config/chatblade/{prompt_name}
+    or a file directly by path
     """
-    path = os.path.expanduser(os.path.join("~/.config/chatblade", f"{prompt_name}"))
+    paths_to_try = [
+        prompt_name,
+        os.path.expanduser(os.path.join("~/.config/chatblade", f"{prompt_name}")),
+    ]
     try:
-        with open(path, "r") as f:
-            return f.read()
-    except FileNotFoundError:
-        # fallback
-        try:
-            return load_prompt_config_legacy_yaml(prompt_name)
-        except:
-            raise errors.ChatbladeError(f"Prompt {prompt_name} not found in {path}")
+        for file_path in paths_to_try:
+            if os.path.exists(file_path):
+                with open(file_path, "r") as f:
+                    return f.read()
+        # fallback legacy
+        load_prompt_config_legacy_yaml(prompt_name)
+    except Exception:
+        locations = "".join(["\n - " + p for p in paths_to_try])
+        raise errors.ChatbladeError(
+            f"no prompt {prompt_name} found in any of following locations: {locations}"
+        )
 
 
 def load_prompt_config_legacy_yaml(prompt_name):
