@@ -28,9 +28,12 @@ def fetch_and_cache(messages, params):
 
 
 def start_repl(messages, params):
+    import readline  # noqa: F401
     while True:
         try:
-            query = Prompt.ask("[yellow]query (type 'quit' to exit): [/yellow]")
+            query = Prompt.get_input(prompt="[yellow]query (type 'quit' to exit):[/yellow]\n",
+                                     console=rich.get_console(),
+                                     password=False)
         except (EOFError, KeyboardInterrupt):
             rich.print("\n")
             exit()
