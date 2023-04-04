@@ -28,14 +28,39 @@ def fetch_and_cache(messages, params):
 
 
 def start_repl(messages, params):
+
+    # Convert newline string from shell into an actual newline character.
+    prompt_end = params.prompt_end.replace("\\n", "\n") + "\n"
+
+    query_lines = []  # Init query buffer.
+
     while True:
         try:
-            query = Prompt.ask("[yellow]query (type 'quit' to exit): [/yellow]")
+            if not query_lines:
+                # Explanatory prompt when starting query entry.
+                prompt_end_str = prompt_end.replace("\n", "\\n")
+                query_lines.append(Prompt.ask(f"[yellow]query ({prompt_end_str} to end query; 'quit' to exit)[/yellow]"))
+            else:
+                # No prompt string after first line.
+                query_lines.append(Prompt.ask(""))
         except (EOFError, KeyboardInterrupt):
             rich.print("\n")
             exit()
-        if query.lower() == "quit":
+        if query_lines[0].lower() == "quit":
+            # Exit if query is a single line that's just 'quit'.
             exit()
+
+        # Join query lines into a complete query with terminating newline.
+        query = "\n".join(query_lines) + "\n"
+
+        if not query.endswith(prompt_end):
+            # Continue gathering lines until the prompt end string is seen.
+            continue
+
+        query_lines = []  # Clear query buffer.
+
+        if query == "":
+            continue # Don't ask GPT if there's no query.
 
         if not messages:
             init_msgs = (
