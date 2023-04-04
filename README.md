@@ -42,7 +42,7 @@ chatblade how can I extract a still frame from a video at 22:01 with ffmpeg
 
 #### recall the last conversation
 
-if you would like to revall the last conversation just call it back with `-l`
+if you would like to recall the last conversation just call it back with `-l`
 
 ```bash
 chatblade -l
