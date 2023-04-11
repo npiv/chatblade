@@ -53,7 +53,7 @@ def to_cache(messages, session):
     file_path_tmp = file_path + make_postfix()
     with open(file_path_tmp, "w") as f:
         yaml.dump(messages, f)
-    os.rename(file_path_tmp, file_path)
+    os.replace(file_path_tmp, file_path)
 
 
 def messages_from_cache(session):
@@ -84,7 +84,7 @@ def migrate_to_session(session):
     file_path_tmp = file_path + make_postfix()
     # resolve name conflict, but keep old cache file
     # until all has gone through fine
-    os.rename(file_path, file_path_tmp)
+    os.replace(file_path, file_path_tmp)
     to_cache(messages, session)
     os.unlink(file_path_tmp)
 
