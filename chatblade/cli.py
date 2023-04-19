@@ -15,7 +15,7 @@ def fetch_and_cache(messages, params):
     if isinstance(result, types.GeneratorType):
         text = Text("")
         message = None
-        with Live(text, refresh_per_second=4) as live:
+        with Live(text, refresh_per_second=4, vertical_overflow="visible") as live:
             for message in result:
                 live.update(message.content)
             live.update("")
