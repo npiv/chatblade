@@ -19,11 +19,15 @@ To stay up to date with the current main branch you can:
 
 The last released version can be installed with `pip install chatblade --upgrade`
 
-### via Brew tap (slow...)
+### Via Brew
 
-Official Homebrew acceptance is pending, in the meantime you can use this brew tap:
 ```
-brew tap npiv/chatblade
+brew install chatblade
+```
+
+**Note**: if you were using the brew tap before, you will need to 
+```
+brew untap npiv/chatblade
 brew install chatblade
 ```
 
