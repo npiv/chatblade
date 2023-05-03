@@ -19,6 +19,13 @@ def get_openai_key(options):
     else:
         return None
 
+def get_theme(options):
+    if options["theme"]:
+        return options["theme"]
+    elif "CHATBLADE_THEME" in os.environ:
+        return os.environ["CHATBLADE_THEME"]
+    else:
+        return None
 
 def extract_query(query):
     """The query comes from both the query and any piped input
@@ -40,6 +47,7 @@ def extract_query(query):
 def extract_options(options):
     options = vars(options)  # to map
     options["openai_api_key"] = get_openai_key(options)
+    options["theme"] = get_theme(options)
     options["model"] = {"3.5": "gpt-3.5-turbo", "4": "gpt-4"}[options["chat_gpt"]]
     del options["query"]
     del options["chat_gpt"]
@@ -136,6 +144,12 @@ def parse(args):
         "--only",
         help="Only display the response, omit query",
         action="store_true",
+    )
+    display_opts.add_argument(
+        "--theme",
+        metavar="theme",
+        type=str,
+        help="Set the theme for syntax highlighting see https://pygments.org/styles/, can also be set with CHATBLADE_THEME",
     )
 
     session_opts = parser.add_argument_group("session options")

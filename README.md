@@ -227,8 +227,8 @@ chatblade can be used with an Azure OpenAI endpoint, in which case in addition t
 ### Help
 
 ```
-usage: Chatblade [-h] [--openai-api-key key] [--temperature t] [-c {3.5,4}] [-i] [-s] [-t] [-p name] [-e] [-r] [-n] [-o] [-l] [-S sess] [--session-list] [--session-path]
-                 [--session-dump] [--session-delete] [--session-rename newsess]
+usage: Chatblade [-h] [--openai-api-key key] [--temperature t] [-c {3.5,4}] [-i] [-s] [-t] [-p name] [-e] [-r] [-n] [-o] [--theme theme] [-l] [-S sess] [--session-list]
+                 [--session-path] [--session-dump] [--session-delete] [--session-rename newsess]
                  [query ...]
 
 a CLI Swiss Army Knife for ChatGPT
@@ -244,13 +244,14 @@ options:
   -i, --interactive               start an interactive chat session. This will implicitly continue the conversation
   -s, --stream                    Stream the incoming text to the terminal
   -t, --tokens                    display what *would* be sent, how many tokens, and estimated costs
-  -p name, --prompt-file name     prompt name - will load the prompt at ~/.config/chatblade/name as system msg
+  -p name, --prompt-file name     prompt name - will load the prompt with that name at ~/.config/chatblade/name or a path to a file
 
 result formatting options:
   -e, --extract                   extract content from response if possible (either json or code block)
   -r, --raw                       print session as pure text, don't pretty print or format
   -n, --no-format                 do not add pretty print formatting to output
   -o, --only                      Only display the response, omit query
+  --theme theme                   Set the theme for syntax highlighting see https://pygments.org/styles/, can also be set with CHATBLADE_THEME
 
 session options:
   -l, --last                      alias for '-S last', the default session if none is specified

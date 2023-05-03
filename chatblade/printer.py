@@ -62,7 +62,7 @@ def print_message(message, args):
     printable = message.content
     if not args.raw:
         printable = detect_and_format_message(
-            message.content, cutoff=1000 if message.role == "user" else None
+            message.content, cutoff=1000 if message.role == "user" else None, theme=args.theme
         )
     if not args.no_format:
       console.print(Rule(message.role, style=COLORS[message.role]))
@@ -86,7 +86,7 @@ def extract_messages(messages, args):
         print(message.content.strip())
 
 
-def detect_and_format_message(msg, cutoff=None):
+def detect_and_format_message(msg, cutoff=None, theme=None):
     if cutoff and len(msg) > cutoff:
         msg = "... **text shortened** ... " + msg[-cutoff:]
         return msg
@@ -95,7 +95,8 @@ def detect_and_format_message(msg, cutoff=None):
         return JSON(extract_json(msg))
     elif looks_like_markdown(msg):
         utils.debug(detected="markdown")
-        return Markdown(msg)
+        theme = "monokai" if theme is None else theme
+        return Markdown(msg,code_theme=theme)
     else:
         utils.debug(detected="regular")
         return msg
