@@ -25,12 +25,6 @@ The last released version can be installed with `pip install chatblade --upgrade
 brew install chatblade
 ```
 
-**Note**: if you were using the brew tap before, you will need to 
-```
-brew untap npiv/chatblade
-brew install chatblade
-```
-
 ## Documentation
 
 ### Making queries
