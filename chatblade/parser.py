@@ -19,6 +19,20 @@ def get_openai_key(options):
     else:
         return None
 
+model_mappings = {"3.5": "gpt-3.5-turbo-0613", "4": "gpt-4-0613"}
+def get_openai_model(options):
+    choice = options["chat_gpt"]
+    if not choice:
+        if "OPENAI_API_MODEL"in os.environ:
+            choice = os.environ["OPENAI_API_MODEL"]
+        else:
+            choice = "3.5"
+
+    if choice in model_mappings:
+        return model_mappings[choice]
+    else:
+        return choice
+
 def get_theme(options):
     if options["theme"]:
         return options["theme"]
@@ -48,7 +62,7 @@ def extract_options(options):
     options = vars(options)  # to map
     options["openai_api_key"] = get_openai_key(options)
     options["theme"] = get_theme(options)
-    options["model"] = {"3.5": "gpt-3.5-turbo", "4": "gpt-4"}[options["chat_gpt"]]
+    options["model"] = get_openai_model(options)
     del options["query"]
     del options["chat_gpt"]
     return utils.DotDict(options)
@@ -92,7 +106,8 @@ def parse(args):
         default=0.0,
     )
     parser.add_argument(
-        "-c", "--chat-gpt", choices=["3.5", "4"], help="chat GPT model", default="3.5"
+        "-c", "--chat-gpt", help="chat GPT model 3.5/4 shorthand or full qualified model name, can also be set via env variable OPENAI_API_MODEL",
+        type=str
     )
     parser.add_argument(
         "-i",

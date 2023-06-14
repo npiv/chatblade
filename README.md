@@ -61,6 +61,8 @@ chatblade -l can we make a gif instead from 00:22:01 to 00:22:04
 
 By default gpt-3.5 is used, you can switch at any point to 4 by using `-c 4`
 
+or you can pass any arbitrary full model name, eg `-c gpt-3.5-turbo-16k`
+
 #### Chatting interactively
 
 If you would prefer to chat interactively instead just use `chatblade -i`.
@@ -221,38 +223,37 @@ chatblade can be used with an Azure OpenAI endpoint, in which case in addition t
 ### Help
 
 ```
-usage: Chatblade [-h] [--openai-api-key key] [--temperature t] [-c {3.5,4}] [-i] [-s] [-t] [-p name] [-e] [-r] [-n] [-o] [--theme theme] [-l] [-S sess] [--session-list]
-                 [--session-path] [--session-dump] [--session-delete] [--session-rename newsess]
-                 [query ...]
+usage: Chatblade [-h] [--openai-api-key key] [--temperature t] [-c CHAT_GPT] [-i] [-s] [-t] [-p name] [-e] [-r] [-n] [-o] [--theme theme] [-l] [-S sess] [--session-list]
 
 a CLI Swiss Army Knife for ChatGPT
 
 positional arguments:
-  query                           Query to send to chat GPT
+  query                            Query to send to chat GPT
 
 options:
-  -h, --help                      show this help message and exit
-  --openai-api-key key            the OpenAI API key can also be set as env variable OPENAI_API_KEY
-  --temperature t                 temperature (openai setting)
-  -c {3.5,4}, --chat-gpt {3.5,4}  chat GPT model
-  -i, --interactive               start an interactive chat session. This will implicitly continue the conversation
-  -s, --stream                    Stream the incoming text to the terminal
-  -t, --tokens                    display what *would* be sent, how many tokens, and estimated costs
-  -p name, --prompt-file name     prompt name - will load the prompt with that name at ~/.config/chatblade/name or a path to a file
+  -h, --help                       show this help message and exit
+  --openai-api-key key             the OpenAI API key can also be set as env variable OPENAI_API_KEY
+  --temperature t                  temperature (openai setting)
+  -c CHAT_GPT, --chat-gpt CHAT_GPT
+                                   chat GPT model 3.5/4 shorthand or full qualified model name, can also be set via env variable OPENAI_API_MODEL
+  -i, --interactive                start an interactive chat session. This will implicitly continue the conversation
+  -s, --stream                     Stream the incoming text to the terminal
+  -t, --tokens                     display what *would* be sent, how many tokens, and estimated costs
+  -p name, --prompt-file name      prompt name - will load the prompt with that name at ~/.config/chatblade/name or a path to a file
 
 result formatting options:
-  -e, --extract                   extract content from response if possible (either json or code block)
-  -r, --raw                       print session as pure text, don't pretty print or format
-  -n, --no-format                 do not add pretty print formatting to output
-  -o, --only                      Only display the response, omit query
-  --theme theme                   Set the theme for syntax highlighting see https://pygments.org/styles/, can also be set with CHATBLADE_THEME
+  -e, --extract                    extract content from response if possible (either json or code block)
+  -r, --raw                        print session as pure text, don't pretty print or format
+  -n, --no-format                  do not add pretty print formatting to output
+  -o, --only                       Only display the response, omit query
+  --theme theme                    Set the theme for syntax highlighting see https://pygments.org/styles/, can also be set with CHATBLADE_THEME
 
 session options:
-  -l, --last                      alias for '-S last', the default session if none is specified
-  -S sess, --session sess         initiate or continue named session
-  --session-list                  list sessions
-  --session-path                  show path to session file
-  --session-dump                  dump session to stdout
-  --session-delete                delete session
-  --session-rename newsess        rename session
+  -l, --last                       alias for '-S last', the default session if none is specified
+  -S sess, --session sess          initiate or continue named session
+  --session-list                   list sessions
+  --session-path                   show path to session file
+  --session-dump                   dump session to stdout
+  --session-delete                 delete session
+  --session-rename newsess         rename session
 ```
