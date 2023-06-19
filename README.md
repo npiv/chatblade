@@ -25,6 +25,13 @@ The last released version can be installed with `pip install chatblade --upgrade
 brew install chatblade
 ```
 
+### via Docker
+
+```
+docker build --no-cache -t chatblade .
+docker run -it --rm chatblade --openai-api-key <valid-openai-api-key> "who is the president of USA?"
+```
+
 ## Documentation
 
 ### Making queries
