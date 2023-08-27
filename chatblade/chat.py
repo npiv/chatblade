@@ -1,10 +1,11 @@
 import collections
+import os
+import yaml
+
 import types
 import tiktoken
 import openai
 import openai.error
-import os
-import yaml
 
 from . import utils, errors
 
