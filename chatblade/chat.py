@@ -2,15 +2,14 @@ import collections
 import os
 import yaml
 
-import types
 import tiktoken
 import openai
-import openai.error
+from openai._exceptions import OpenAIError
 
 from . import utils, errors
 
-class Message(collections.namedtuple("Message", ["role", "content"])):
 
+class Message(collections.namedtuple("Message", ["role", "content"])):
     @staticmethod
     def represent_for_yaml(dumper, msg):
         val = []
@@ -26,13 +25,18 @@ class Message(collections.namedtuple("Message", ["role", "content"])):
         """instantiate from YAML provided representation"""
         return cls(**seq)
 
+
 yaml.add_representer(Message, Message.represent_for_yaml)
 
 
 CostConfig = collections.namedtuple("CostConfig", "name prompt_cost completion_cost")
 CostCalculation = collections.namedtuple("CostCalculation", "name tokens cost")
 
-costs = [CostConfig("gpt-3.5-turbo", 0.002, 0.002), CostConfig("gpt-4", 0.03, 0.06)]
+costs = [
+    CostConfig("gpt-3.5-turbo", 0.001, 0.002),
+    CostConfig("gpt-4", 0.03, 0.06),
+    CostConfig("gpt-4-1106-preview", 0.01, 0.03),
+]
 
 
 def get_tokens_and_costs(messages):
@@ -82,53 +86,44 @@ DEFAULT_OPENAI_SETTINGS = {
 }
 
 
-def map_generator(openai_gen):
+def map_from_stream(openai_gen):
     """maps a openai streaming generator a stream of Message with the
     final one being the completed Message"""
     role, message = None, ""
     for update in openai_gen:
-        delta = [choice["delta"] for choice in update["choices"]][0]
-        if "role" in delta:
-            role = delta["role"]
-        elif "content" in delta:
-            message += delta["content"]
+        delta = [choice.delta for choice in update.choices][0]
+        if delta.role:
+            role = delta.role
+        elif delta.content:
+            message += delta.content
         yield Message(role, message)
 
 
 def map_single(result):
     """maps a result to a Message"""
-    response_message = [choice["message"] for choice in result["choices"]][0]
-    return Message(response_message["role"], response_message["content"])
+    response_message = [choice.message for choice in result.choices][0]
+    return Message(response_message.role, response_message.content)
 
 
-def set_azure_if_present(config):
-    """checks if azure settings present and sets endpoint config."""
-    if os.environ.get("OPENAI_API_TYPE", "open_ai") in ("azure", "azure_ad", "azuread"):
-        # this is a workaround that can be removed once https://github.com/openai/openai-python/pull/335
-        # is in the openai version that chatblade uses
-        openai.api_version = "2023-03-15-preview"
-
+def build_client(config):
     if "OPENAI_API_AZURE_ENGINE" in os.environ:
-        config["engine"] = os.environ["OPENAI_API_AZURE_ENGINE"]
+        return openai.AzureOpenAI(api_key=config["openai_api_key"])
+    else:
+        return openai.OpenAI(api_key=config["openai_api_key"])
 
 
 def query_chat_gpt(messages, config):
     """Queries the chat GPT API with the given messages and config."""
-    openai.api_key = config["openai_api_key"]
+    client = build_client(config)
     config = utils.merge_dicts(DEFAULT_OPENAI_SETTINGS, config)
-    set_azure_if_present(config)
     dict_messages = [msg._asdict() for msg in messages]
     try:
-        result = openai.ChatCompletion.create(messages=dict_messages, **config)
-        if isinstance(result, types.GeneratorType):
-            return map_generator(result)
-        elif isinstance(result, dict):
+        result = client.chat.completions.create(messages=dict_messages, **config)
+        if isinstance(result, openai._streaming.Stream):
+            return map_from_stream(result)
+        elif isinstance(result, openai.types.chat.ChatCompletion):
             return map_single(result)
         else:
             raise ValueError(f"unexpected result openai: {result}")
-    except (
-        openai.error.InvalidRequestError,
-        openai.error.AuthenticationError,
-        openai.error.RateLimitError,
-    ) as e:
+    except OpenAIError as e:
         raise errors.ChatbladeError(f"openai error: {e}")

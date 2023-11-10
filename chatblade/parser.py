@@ -19,11 +19,18 @@ def get_openai_key(options):
     else:
         return None
 
-model_mappings = {"3.5": "gpt-3.5-turbo-0613", "4": "gpt-4-0613"}
+
+model_mappings = {
+    "3.5": "gpt-3.5-turbo-0613",
+    "4": "gpt-4",
+    "4t": "gpt-4-1106-preview",
+}
+
+
 def get_openai_model(options):
     choice = options["chat_gpt"]
     if not choice:
-        if "OPENAI_API_MODEL"in os.environ:
+        if "OPENAI_API_MODEL" in os.environ:
             choice = os.environ["OPENAI_API_MODEL"]
         else:
             choice = "3.5"
@@ -33,6 +40,7 @@ def get_openai_model(options):
     else:
         return choice
 
+
 def get_theme(options):
     if options["theme"]:
         return options["theme"]
@@ -40,6 +48,7 @@ def get_theme(options):
         return os.environ["CHATBLADE_THEME"]
     else:
         return None
+
 
 def extract_query(query):
     """The query comes from both the query and any piped input
@@ -84,6 +93,9 @@ class RenameAction(argparse.Action):
             raise argparse.ArgumentError(self, f"target: {e}")
 
 
+model_mappings_str = ", ".join(["%s (%s)" % e for e in model_mappings.items()])
+
+
 def parse(args):
     parser = argparse.ArgumentParser(
         "Chatblade",
@@ -106,8 +118,12 @@ def parse(args):
         default=0.0,
     )
     parser.add_argument(
-        "-c", "--chat-gpt", help="chat GPT model 3.5/4 shorthand or full qualified model name, can also be set via env variable OPENAI_API_MODEL",
-        type=str
+        "-c",
+        "--chat-gpt",
+        help=f"""chat GPT model use either the fully qualified model name, or
+        {model_mappings_str}. Can also be set via env variable OPENAI_API_MODEL
+        """,
+        type=str,
     )
     parser.add_argument(
         "-i",

@@ -59,9 +59,9 @@ chatblade -l can we make a gif instead from 00:22:01 to 00:22:04
 
 #### Picking between gpt-3.5 and 4
 
-By default gpt-3.5 is used, you can switch at any point to 4 by using `-c 4`
+By default gpt-3.5 is used, you can switch at any point to 4 by using `-c 4` or the latest gpt-4-1106-preview by using `-c 4t`
 
-or you can pass any arbitrary full model name, eg `-c gpt-3.5-turbo-16k`
+Additionally you can pass any arbitrary full model name, eg `-c gpt-3.5-turbo-16k`
 
 #### Chatting interactively
 
@@ -223,7 +223,9 @@ chatblade can be used with an Azure OpenAI endpoint, in which case in addition t
 ### Help
 
 ```
-usage: Chatblade [-h] [--openai-api-key key] [--temperature t] [-c CHAT_GPT] [-i] [-s] [-t] [-p name] [-e] [-r] [-n] [-o] [--theme theme] [-l] [-S sess] [--session-list]
+usage: Chatblade [-h] [--openai-api-key key] [--temperature t] [-c CHAT_GPT] [-i] [-s] [-t] [-p name] [-e] [-r] [-n] [-o] [--theme theme] [-l] [-S sess] [--session-list] [--session-path] [--session-dump] [--session-delete]
+                 [--session-rename newsess]
+                 [query ...]
 
 a CLI Swiss Army Knife for ChatGPT
 
@@ -235,7 +237,7 @@ options:
   --openai-api-key key             the OpenAI API key can also be set as env variable OPENAI_API_KEY
   --temperature t                  temperature (openai setting)
   -c CHAT_GPT, --chat-gpt CHAT_GPT
-                                   chat GPT model 3.5/4 shorthand or full qualified model name, can also be set via env variable OPENAI_API_MODEL
+                                   chat GPT model use either the fully qualified model name, or 3.5 (gpt-3.5-turbo-0613), 4 (gpt-4), 4t (gpt-4-1106-preview). Can also be set via env variable OPENAI_API_MODEL
   -i, --interactive                start an interactive chat session. This will implicitly continue the conversation
   -s, --stream                     Stream the incoming text to the terminal
   -t, --tokens                     display what *would* be sent, how many tokens, and estimated costs
