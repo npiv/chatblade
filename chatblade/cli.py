@@ -21,7 +21,7 @@ def fetch_and_cache(messages, params):
             live.update("")
         response_msg = message
     else:
-        response_msg = chat.query_chat_gpt(messages, params)
+        response_msg = result
     messages.append(response_msg)
     storage.to_cache(messages, params.session or utils.scratch_session)
     return messages
