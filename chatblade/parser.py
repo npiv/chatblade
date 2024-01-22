@@ -144,6 +144,11 @@ def parse(args):
         action="store_true",
     )
     parser.add_argument(
+        "--version",
+        help="display the chatblade version",
+        action="store_true",
+    )
+    parser.add_argument(
         "-p",
         "--prompt-file",
         metavar="name",

@@ -148,6 +148,13 @@ def cli():
         exit(ret)
     if params.debug:
         utils.CONSOLE_DEBUG_LOGGING = True
+    if params.version:
+        from distutils.dist import Distribution
+        dist = Distribution()
+        dist.parse_config_files()
+        version = dist.get_option_dict('metadata')['version'][1]
+        print(f"chatblade {version}")
+        exit(0)
     try:
         handle_input(query, params)
     except errors.ChatbladeError as e:
