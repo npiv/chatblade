@@ -149,6 +149,12 @@ def parse(args):
         action="store_true",
     )
     parser.add_argument(
+        "-cl",
+        "--conversation-limit",
+        help="limit the number of conversations passed with a session",
+        action="store_true",
+    )
+    parser.add_argument(
         "-p",
         "--prompt-file",
         metavar="name",
