@@ -155,6 +155,13 @@ def parse(args):
         type=str,
         help="prompt name - will load the prompt with that name at ~/.config/chatblade/name or a path to a file",
     )
+    parser.add_argument(
+        "--prompt-end",
+        metavar="str",
+        type=str,
+        help=r"string that ends an interactive prompt and sends query to GPT. (Use \\n to indicate newline.)",
+        default="",  # A newline is appended to this later on.
+    )
 
     display_opts = parser.add_argument_group("result formatting options")
     display_opts.add_argument(
