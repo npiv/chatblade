@@ -167,7 +167,7 @@ This won't perform any action over the wire, and just calculates the tokens loca
 
 The system message is used to instruct the model how to behave, see [OpenAI - Instructing Chat Models](https://platform.openai.com/docs/guides/chat/instructing-chat-models).
 
-These can be loaded with `-p`. For convenience any file we place under ~/.config/chatblade/ will be picked up by this command.
+These can be loaded with `-p`. For convenience any file we place under `~/.config/chatblade/` will be picked up by this command.
 
 So for example, given the following file `~/.config/chatblade/etymology`, which contains:
 
@@ -200,7 +200,13 @@ We can now run a command and refer to this prompt with `-p etymology`:
 chatblade -p etymology gregarious
 ```
 
-You can also point -p to a file path directly to load a system message from any arbitrary location
+If you set the environment variable `CHATBLADE_DEFAULT_PROMPT` to the name of a prompt, chatblade will use its value if no other prompt is specified on the command line.
+```bash
+% export CHATBLADE_DEFAULT_PROMPT=default
+% chatblade "Hi there"  # Acts like -p default
+```
+
+You can also point `-p` to a file path directly to load a system message from any arbitrary location
 
 <img src="assets/example5.png">
 
