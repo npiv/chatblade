@@ -58,7 +58,7 @@ def handle_input(query, params):
     if params.session:
         messages = storage.messages_from_cache(params.session)
     if messages:  # a session specified and it alredy exists
-        if params.prompt_file:
+        if params.prompt_file and not params.prompt_set_by_env:
             printer.warn("refusing to prepend prompt to existing session")
             exit(1)
         if query:  # continue conversation
@@ -147,8 +147,10 @@ def cli():
     # If we don't have a prompt on the command line, but the user has
     # defined a CHATBLADE_DEFAULT_PROMPT environment variable, use the env
     # variable as the prompt.
+    params.prompt_set_by_env = False
     if not params.prompt_file and "CHATBLADE_DEFAULT_PROMPT" in os.environ:
         params.prompt_file = os.environ["CHATBLADE_DEFAULT_PROMPT"]
+        params.prompt_set_by_env = True
 
     if params.session_op:
         ret = do_session_op(params.session, params.session_op, params.rename_to)
