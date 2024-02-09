@@ -57,7 +57,7 @@ def handle_input(query, params):
     messages = None
     if params.session:
         messages = storage.messages_from_cache(params.session)
-    if messages:  # a session specified and it alredy exists
+    if messages:  # a session specified and it already exists
         if params.prompt_file and not params.prompt_set_by_env:
             printer.warn("refusing to prepend prompt to existing session")
             exit(1)
