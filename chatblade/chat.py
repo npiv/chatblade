@@ -107,7 +107,10 @@ def map_single(result):
 
 def build_client(config):
     if "OPENAI_API_AZURE_ENGINE" in os.environ:
-        return openai.AzureOpenAI(api_key=config["openai_api_key"])
+        return openai.AzureOpenAI(
+            api_key=config["openai_api_key"],
+            azure_deployment=os.environ.get("OPENAI_API_AZURE_ENGINE"),
+        )
     else:
         return openai.OpenAI(api_key=config["openai_api_key"])
 

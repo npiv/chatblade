@@ -215,7 +215,7 @@ chatblade -l -e > toanki
 chatblade can be used with an Azure OpenAI endpoint, in which case in addition to the `OPENAI_API_KEY` you'll need to set the following environment variables:
 
 - `OPENAI_API_TYPE` :: Set to `azure`. As required by [openai-python](https://github.com/openai/openai-python)
-- `OPENAI_API_BASE` :: URL to your cognitive services endpoint, e.g. `https://eastus.api.cognitive.microsoft.com/`
+- `AZURE_OPENAI_ENDPOINT` :: URL to your cognitive services endpoint, e.g. `https://eastus.api.cognitive.microsoft.com/`. Please note this is a *breaking change* introduced by `openai-python` and the previous environment variable name is `OPENAI_API_BASE`
 - `OPENAI_API_AZURE_ENGINE` :: name of your deployment in Azure, eg `my-gpt-35-turbo` (maps to a specific model)
 
 *Note*: that this will override any option for `-c 3.5` or `-c 4` which don't make sense in this case.
