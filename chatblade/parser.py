@@ -111,6 +111,12 @@ def parse(args):
         help="the OpenAI API key can also be set as env variable OPENAI_API_KEY",
     )
     parser.add_argument(
+        "--openai-base-url",
+        metavar="key",
+        type=str,
+        help="A custom url to use the openAI against a local or custom model, eg ollama",
+    )
+    parser.add_argument(
         "--temperature",
         metavar="t",
         type=float,
