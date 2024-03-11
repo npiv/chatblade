@@ -30,7 +30,7 @@ def fetch_and_cache(messages, params):
 def start_repl(messages, params):
     while True:
         try:
-            query = Prompt.ask("[yellow]query (type 'quit' to exit): [/yellow]")
+            query = Prompt.ask("[yellow]query (type 'quit' to exit)[/yellow]")
         except (EOFError, KeyboardInterrupt):
             rich.print("\n")
             exit()
