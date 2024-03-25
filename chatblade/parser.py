@@ -112,7 +112,7 @@ def parse(args):
     )
     parser.add_argument(
         "--openai-base-url",
-        metavar="key",
+        metavar="url",
         type=str,
         help="A custom url to use the openAI against a local or custom model, eg ollama",
     )
