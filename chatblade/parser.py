@@ -11,15 +11,6 @@ def get_piped_input():
     return None
 
 
-def get_openai_key(options):
-    if options["openai_api_key"]:
-        return options["openai_api_key"]
-    elif "OPENAI_API_KEY" in os.environ:
-        return os.environ["OPENAI_API_KEY"]
-    else:
-        return None
-
-
 model_mappings = {
     "3.5": "gpt-3.5-turbo-0613",
     "4": "gpt-4",
@@ -69,7 +60,6 @@ def extract_query(query):
 
 def extract_options(options):
     options = vars(options)  # to map
-    options["openai_api_key"] = get_openai_key(options)
     options["theme"] = get_theme(options)
     options["model"] = get_openai_model(options)
     del options["query"]
