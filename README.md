@@ -241,6 +241,7 @@ positional arguments:
 options:
   -h, --help                       show this help message and exit
   --openai-api-key key             the OpenAI API key can also be set as env variable OPENAI_API_KEY
+  --openai-base-url key            A custom url to use the openAI against a local or custom model, eg ollama
   --temperature t                  temperature (openai setting)
   -c CHAT_GPT, --chat-gpt CHAT_GPT
                                    chat GPT model use either the fully qualified model name, or 3.5 (gpt-3.5-turbo-0613), 4 (gpt-4), 4t (gpt-4-1106-preview). Can also be set via env variable OPENAI_API_MODEL

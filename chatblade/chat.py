@@ -112,7 +112,7 @@ def build_client(config):
             azure_deployment=os.environ.get("OPENAI_API_AZURE_ENGINE"),
         )
     else:
-        return openai.OpenAI(api_key=config["openai_api_key"])
+        return openai.OpenAI(api_key=config["openai_api_key"], base_url=config["openai_base_url"])
 
 
 def query_chat_gpt(messages, config):
