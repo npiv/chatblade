@@ -20,10 +20,12 @@ def get_openai_key(options):
         return None
 
 
+# https://platform.openai.com/docs/models/continuous-model-upgrades
 model_mappings = {
-    "3.5": "gpt-3.5-turbo-0613",
+    "3.5": "gpt-3.5-turbo",
     "4": "gpt-4",
-    "4t": "gpt-4-1106-preview",
+    "4t": "gpt-4-turbo",
+    "4o": "gpt-4o",
 }
 
 

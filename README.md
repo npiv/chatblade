@@ -31,7 +31,7 @@ brew install chatblade
 
 #### A new conversation
 
-You can begin any query by just typing. eg
+You can begin any query by just typing. f.e.:
 
 ```bash
 chatblade how can I extract a still frame from a video at 22:01 with ffmpeg
@@ -59,13 +59,13 @@ chatblade -l can we make a gif instead from 00:22:01 to 00:22:04
 
 #### Picking between gpt-3.5 and 4
 
-By default gpt-3.5 is used, you can switch at any point to 4 by using `-c 4` or the latest gpt-4-1106-preview by using `-c 4t`
+By default, gpt-3.5 is used, you can switch at any point to 4 by using `-c 4` or the latest 4o ("omni") by using `-c 4o`.
 
-Additionally you can pass any arbitrary full model name, eg `-c gpt-3.5-turbo-16k`
+Additionally, you can pass any arbitrary full model name, f.e. `-c gpt-3.5-turbo-16k`.
 
 #### Chatting interactively
 
-If you would prefer to chat interactively instead just use `chatblade -i`.
+If you preferred to chat interactively instead just use `chatblade -i`.
 
 #### Show streaming text (experimental)
 
@@ -81,7 +81,7 @@ https://user-images.githubusercontent.com/452020/226891636-54d12df2-528f-4365-a4
 Responses are parsed and if chatblade thinks its markdown it will be presented as such, to get syntax highlighting. But sometimes this may not be what you want, as it removes new lines, or because you are only interested in extracting a part of the result to pipe to another command.
 
 In that case you have 2 options:
-- `-r` for raw, which just prints the text exactly as ChatGPT returned it, and doesn't pass it through markdown.
+- `-r` for raw, which just prints the text exactly as ChatGPT returned it, and doesn't pass it through Markdown.
 - `-e` for extract, which will try to detect what was returned (either a code block or json) and extract only that part. If neither of those are found it does the same as `-r`
 
 Both options can be used either with a new query, e.g.
@@ -215,8 +215,8 @@ chatblade -l -e > toanki
 chatblade can be used with an Azure OpenAI endpoint, in which case in addition to the `OPENAI_API_KEY` you'll need to set the following environment variables:
 
 - `OPENAI_API_TYPE` :: Set to `azure`. As required by [openai-python](https://github.com/openai/openai-python)
-- `AZURE_OPENAI_ENDPOINT` :: URL to your cognitive services endpoint, e.g. `https://eastus.api.cognitive.microsoft.com/`. Please note this is a *breaking change* introduced by `openai-python` and the previous environment variable name is `OPENAI_API_BASE`
-- `OPENAI_API_AZURE_ENGINE` :: name of your deployment in Azure, eg `my-gpt-35-turbo` (maps to a specific model)
+- `AZURE_OPENAI_ENDPOINT` :: URL to your cognitive services' endpoint, e.g. `https://eastus.api.cognitive.microsoft.com/`. Please note this is a *breaking change* introduced by `openai-python` and the previous environment variable name is `OPENAI_API_BASE`
+- `OPENAI_API_AZURE_ENGINE` :: name of your deployment in Azure, f.e. `my-gpt-35-turbo` (maps to a specific model)
 
 *Note*: that this will override any option for `-c 3.5` or `-c 4` which don't make sense in this case.
 
@@ -238,7 +238,9 @@ options:
   --openai-base-url key            A custom url to use the openAI against a local or custom model, eg ollama
   --temperature t                  temperature (openai setting)
   -c CHAT_GPT, --chat-gpt CHAT_GPT
-                                   chat GPT model use either the fully qualified model name, or 3.5 (gpt-3.5-turbo-0613), 4 (gpt-4), 4t (gpt-4-1106-preview). Can also be set via env variable OPENAI_API_MODEL
+                                   ChatGPT model - use either the fully qualified model name, or one of 3.5 (gpt-3.5-turbo), 4 (gpt-4),
+                                   4t (gpt-4-turbo), 4o (gpt-4o). Can also be set via env variable OPENAI_API_MODEL, see
+                                   https://platform.openai.com/docs/models/continuous-model-upgrades for available models.
   -i, --interactive                start an interactive chat session. This will implicitly continue the conversation
   -s, --stream                     Stream the incoming text to the terminal
   -t, --tokens                     display what *would* be sent, how many tokens, and estimated costs
