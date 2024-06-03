@@ -91,6 +91,8 @@ def map_from_stream(openai_gen):
     final one being the completed Message"""
     role, message = None, ""
     for update in openai_gen:
+        if not update.choices:
+            continue  # Skip the iteration if choices is empty
         delta = [choice.delta for choice in update.choices][0]
         if delta.role:
             role = delta.role
