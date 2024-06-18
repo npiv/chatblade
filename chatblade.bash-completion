@@ -1,0 +1,31 @@
+_chatblade_complete () {
+    COMPREPLY=()
+    local cur=${COMP_WORDS[COMP_CWORD]}
+    local prev=${COMP_WORDS[COMP_CWORD-1]}
+
+  if [[ ${cur} == -* ]]
+    then
+      OPTIONS=$( chatblade --help | egrep -o -- '--[a-z-]+' | sort | uniq )
+      COMPREPLY=($(compgen -W "$OPTIONS" -- $cur ) )
+    return 0
+  fi
+
+    case "$prev" in
+    -c|--chat-gpt)
+        COMPREPLY=( $( compgen -W "3.5 4" -- $cur ) )
+        return 0
+        ;;
+    -p|--prompt-file)
+        OPTIONS=$( ls ~/.config/chatblade/ )
+        COMPREPLY=( $( compgen -W "$OPTIONS" -- $cur ) )
+        return 0
+        ;;
+    -S|--session)
+        OPTIONS=$( chatblade --session-list )
+        COMPREPLY=( $( compgen -W "$OPTIONS" -- $cur ) )
+        return 0
+        ;;
+    esac
+}
+
+complete -o nospace -F _chatblade_complete chatblade
