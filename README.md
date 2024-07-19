@@ -1,4 +1,5 @@
 # Chatblade
+
 ## A CLI Swiss Army Knife for ChatGPT
 
 Chatblade is a versatile command-line interface (CLI) tool designed to interact with OpenAI's ChatGPT. It accepts piped input, arguments, or both, and allows you to save common prompt preambles for quick usage. Additionally, Chatblade provides utility methods to extract JSON or Markdown from ChatGPT responses.
@@ -12,6 +13,7 @@ You can do that by either passing `--openai-api-key KEY` or by setting an env va
 ### Latest and greatest
 
 To stay up to date with the current main branch you can:
+
 - check out the project, and run `pip install .`
 - or `pip install 'chatblade @ git+https://github.com/npiv/chatblade'`
 
@@ -36,6 +38,7 @@ You can begin any query by just typing. f.e.:
 ```bash
 chatblade how can I extract a still frame from a video at 22:01 with ffmpeg
 ```
+
 <img width="650" alt="image" src="https://user-images.githubusercontent.com/452020/226869260-1dcd4faf-521c-466b-998a-fd5cfdc5b3c7.png">
 
 #### recall the last conversation
@@ -56,7 +59,6 @@ chatblade -l can we make a gif instead from 00:22:01 to 00:22:04
 
 `-l` is shorthand for `-S last` or the last session. We can keep track of and continue various distinct conversations using the [session options](#session-options)
 
-
 #### Picking between gpt-3.5 and 4
 
 By default, gpt-3.5 is used, you can switch at any point to 4 by using `-c 4` or the latest 4o ("omni") by using `-c 4o`.
@@ -73,14 +75,14 @@ You can also stream the responses, just like in the webui. At the end of the str
 
 ```chatblade -s -i```
 
-https://user-images.githubusercontent.com/452020/226891636-54d12df2-528f-4365-a4f3-e51cb025773c.mov
-
+<https://user-images.githubusercontent.com/452020/226891636-54d12df2-528f-4365-a4f3-e51cb025773c.mov>
 
 ### Formatting the results
 
 Responses are parsed and if chatblade thinks its markdown it will be presented as such, to get syntax highlighting. But sometimes this may not be what you want, as it removes new lines, or because you are only interested in extracting a part of the result to pipe to another command.
 
 In that case you have 2 options:
+
 - `-r` for raw, which just prints the text exactly as ChatGPT returned it, and doesn't pass it through Markdown.
 - `-e` for extract, which will try to detect what was returned (either a code block or json) and extract only that part. If neither of those are found it does the same as `-r`
 
@@ -91,6 +93,7 @@ chatblade -e write me a python boilerplate script that starts a server and print
 ```
 
 or with the last result (json in this example)
+
 ```bash
 chatblade -l -e | jq
 ```
@@ -239,7 +242,7 @@ options:
   --temperature t                  temperature (openai setting)
   -c CHAT_GPT, --chat-gpt CHAT_GPT
                                    ChatGPT model - use either the fully qualified model name, or one of 3.5 (gpt-3.5-turbo), 4 (gpt-4),
-                                   4t (gpt-4-turbo), 4o (gpt-4o). Can also be set via env variable OPENAI_API_MODEL, see
+                                   4t (gpt-4-turbo), 4o (gpt-4o), mini (gpt-4o-mini). Default is gpt-4o-mini. Can also be set via env variable OPENAI_API_MODEL, see
                                    https://platform.openai.com/docs/models/continuous-model-upgrades for available models.
   -i, --interactive                start an interactive chat session. This will implicitly continue the conversation
   -s, --stream                     Stream the incoming text to the terminal
@@ -262,4 +265,3 @@ session options:
   --session-delete                 delete session
   --session-rename newsess         rename session
 ```
-
