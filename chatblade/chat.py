@@ -33,9 +33,10 @@ CostConfig = collections.namedtuple("CostConfig", "name prompt_cost completion_c
 CostCalculation = collections.namedtuple("CostCalculation", "name tokens cost")
 
 costs = [
-    CostConfig("gpt-3.5-turbo", 0.001, 0.002),
-    CostConfig("gpt-4", 0.03, 0.06),
-    CostConfig("gpt-4-1106-preview", 0.01, 0.03),
+    CostConfig("gpt-3.5-turbo", 0.5, 1.5),
+    CostConfig("gpt-4", 5, 15),
+    CostConfig("gpt-4-1106-preview", 5, 15),
+    CostConfig("gpt-4o-mini", 0.15, 0.6),
 ]
 
 
@@ -70,7 +71,7 @@ def num_tokens_in_messages(messages, cost_config):
     if messages[-1].role == "user":
         num_tokens += 2  # every reply is primed with <im_start>assistant
         cost += cost_config.prompt_cost * 2
-    return num_tokens, cost / 1000
+    return num_tokens, cost / 1000000
 
 
 def init_conversation(user_msg, system_msg=None):

@@ -20,10 +20,13 @@ def get_openai_key(options):
         return None
 
 
+# https://platform.openai.com/docs/models/continuous-model-upgrades
 model_mappings = {
-    "3.5": "gpt-3.5-turbo-0613",
+    "3.5": "gpt-3.5-turbo",
     "4": "gpt-4",
-    "4t": "gpt-4-1106-preview",
+    "4t": "gpt-4-turbo",
+    "4o": "gpt-4o",
+    "mini": "gpt-4o-mini",
 }
 
 
@@ -33,7 +36,7 @@ def get_openai_model(options):
         if "OPENAI_API_MODEL" in os.environ:
             choice = os.environ["OPENAI_API_MODEL"]
         else:
-            choice = "3.5"
+            choice = "mini"
 
     if choice in model_mappings:
         return model_mappings[choice]
