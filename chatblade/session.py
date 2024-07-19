@@ -10,7 +10,7 @@ def list_sessions():
     sess_paths = glob.glob(os.path.join(storage.get_cache_path(), "*.yaml"))
     return sorted(
         [
-            re.sub("\.yaml\Z", "", os.path.basename(sess_path))
+            re.sub("\\.yaml\\Z", "", os.path.basename(sess_path))
             for sess_path in sess_paths
         ]
     )
