@@ -26,6 +26,7 @@ model_mappings = {
     "4": "gpt-4",
     "4t": "gpt-4-turbo",
     "4o": "gpt-4o",
+    "mini": "gpt-4o-mini",
 }
 
 
@@ -35,7 +36,7 @@ def get_openai_model(options):
         if "OPENAI_API_MODEL" in os.environ:
             choice = os.environ["OPENAI_API_MODEL"]
         else:
-            choice = "3.5"
+            choice = "mini"
 
     if choice in model_mappings:
         return model_mappings[choice]
