@@ -9,6 +9,7 @@ from rich.table import Table
 from rich.rule import Rule
 
 from chatblade import utils
+from pylatexenc.latex2text import LatexNodes2Text
 
 
 console = Console()
@@ -85,8 +86,20 @@ def extract_messages(messages, args):
     else:
         print(message.content.strip())
 
+def format_latex(msg):
+    converter = LatexNodes2Text()
+    msg = converter.latex_to_text(msg)
+
+    # do no change code blocks to smart quotes, this will break the markdown
+    # parser.
+    msg = msg.replace("“", "``")
+
+    return msg
 
 def detect_and_format_message(msg, cutoff=None, theme=None):
+    # convert any latex markup to ASCII.
+    msg = format_latex(msg)
+
     if cutoff and len(msg) > cutoff:
         msg = "... **text shortened** ... " + msg[-cutoff:]
         return msg
