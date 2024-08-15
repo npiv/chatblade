@@ -149,11 +149,8 @@ def cli():
     if params.debug:
         utils.CONSOLE_DEBUG_LOGGING = True
     if params.version:
-        from distutils.dist import Distribution
-        dist = Distribution()
-        dist.parse_config_files()
-        version = dist.get_option_dict('metadata')['version'][1]
-        print(f"chatblade {version}")
+        from importlib.metadata import version as get_version
+        print(f"chatblade {get_version('chatblade')}")
         exit(0)
     try:
         handle_input(query, params)
