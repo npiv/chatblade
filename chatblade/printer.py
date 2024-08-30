@@ -96,7 +96,7 @@ def format_latex(msg):
     code_inlines = re.findall(code_inline_pattern, msg)
     msg = re.sub(code_inline_pattern, "\0CODE_INLINE\0", msg)
 
-    converter = LatexNodes2Text()
+    converter = LatexNodes2Text(keep_comments=True)
     msg = converter.latex_to_text(msg)
 
     # do no change code blocks to smart quotes, this will break the markdown
