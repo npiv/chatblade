@@ -9,6 +9,7 @@ from rich.table import Table
 from rich.rule import Rule
 
 from chatblade import utils
+from pylatexenc.latex2text import LatexNodes2Text
 
 
 console = Console()
@@ -85,8 +86,36 @@ def extract_messages(messages, args):
     else:
         print(message.content.strip())
 
+def format_latex(msg):
+    # Replace code blocks and inline code with markers. Use null delimiters to
+    # hopefully avoid any overlap with anything chatgpt could ever output.
+    code_block_pattern = re.compile(r"```[\w]*\n.*?\n```", re.DOTALL)
+    code_blocks = re.findall(code_block_pattern, msg)
+    msg = re.sub(code_block_pattern, "\0CODE_BLOCK\0", msg)
+    code_inline_pattern = re.compile(r"`.*?`", re.DOTALL)
+    code_inlines = re.findall(code_inline_pattern, msg)
+    msg = re.sub(code_inline_pattern, "\0CODE_INLINE\0", msg)
+
+    converter = LatexNodes2Text(keep_comments=True)
+    msg = converter.latex_to_text(msg)
+
+    # do no change code blocks to smart quotes, this will break the markdown
+    # parser.
+    msg = msg.replace("“", "``")
+
+    # Restore the code blocks and inline code at the markers
+    for code_block in code_blocks:
+        msg = msg.replace("\0CODE_BLOCK\0", code_block, 1)
+    for code_inline in code_inlines:
+        msg = msg.replace("\0CODE_INLINE\0", code_inline, 1)
+
+    return msg
+
 
 def detect_and_format_message(msg, cutoff=None, theme=None):
+    # convert any latex markup to ASCII.
+    msg = format_latex(msg)
+
     if cutoff and len(msg) > cutoff:
         msg = "... **text shortened** ... " + msg[-cutoff:]
         return msg
