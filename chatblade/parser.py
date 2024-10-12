@@ -27,7 +27,11 @@ model_mappings = {
     "4t": "gpt-4-turbo",
     "4o": "gpt-4o",
     "mini": "gpt-4o-mini",
+    "o1": "o1-preview",
+    "o1mini": "o1-mini",
 }
+
+DEFAULT_MODEL = "mini"
 
 
 def get_openai_model(options):
@@ -36,7 +40,7 @@ def get_openai_model(options):
         if "OPENAI_API_MODEL" in os.environ:
             choice = os.environ["OPENAI_API_MODEL"]
         else:
-            choice = "mini"
+            choice = DEFAULT_MODEL
 
     if choice in model_mappings:
         return model_mappings[choice]

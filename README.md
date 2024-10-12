@@ -226,8 +226,8 @@ chatblade can be used with an Azure OpenAI endpoint, in which case in addition t
 ### Help
 
 ```
-usage: Chatblade [-h] [--openai-api-key key] [--temperature t] [-c CHAT_GPT] [-i] [-s] [-t] [-p name] [-e] [-r] [-n] [-o] [--theme theme] [-l] [-S sess] [--session-list] [--session-path] [--session-dump] [--session-delete]
-                 [--session-rename newsess]
+usage: Chatblade [-h] [--openai-api-key key] [--openai-base-url key] [--temperature t] [-c CHAT_GPT] [-i] [-s] [-t] [--version] [-p name] [-e] [-r] [-n] [-o] [--theme theme] [-l]
+                 [-S sess] [--session-list] [--session-path] [--session-dump] [--session-delete] [--session-rename newsess]
                  [query ...]
 
 a CLI Swiss Army Knife for ChatGPT
@@ -241,12 +241,12 @@ options:
   --openai-base-url key            A custom url to use the openAI against a local or custom model, eg ollama
   --temperature t                  temperature (openai setting)
   -c CHAT_GPT, --chat-gpt CHAT_GPT
-                                   ChatGPT model - use either the fully qualified model name, or one of 3.5 (gpt-3.5-turbo), 4 (gpt-4),
-                                   4t (gpt-4-turbo), 4o (gpt-4o), mini (gpt-4o-mini). Default is gpt-4o-mini. Can also be set via env variable OPENAI_API_MODEL, see
-                                   https://platform.openai.com/docs/models/continuous-model-upgrades for available models.
+                                   chat GPT model use either the fully qualified model name, or 3.5 (gpt-3.5-turbo), 4 (gpt-4), 4t (gpt-4-turbo), 4o (gpt-4o), mini (gpt-4o-mini),
+                                   o1 (o1-preview), o1mini (o1-mini). Can also be set via env variable OPENAI_API_MODEL
   -i, --interactive                start an interactive chat session. This will implicitly continue the conversation
   -s, --stream                     Stream the incoming text to the terminal
   -t, --tokens                     display what *would* be sent, how many tokens, and estimated costs
+  --version                        display the chatblade version
   -p name, --prompt-file name      prompt name - will load the prompt with that name at ~/.config/chatblade/name or a path to a file
 
 result formatting options:
@@ -265,3 +265,4 @@ session options:
   --session-delete                 delete session
   --session-rename newsess         rename session
 ```
+

@@ -34,9 +34,12 @@ CostCalculation = collections.namedtuple("CostCalculation", "name tokens cost")
 
 costs = [
     CostConfig("gpt-3.5-turbo", 0.5, 1.5),
-    CostConfig("gpt-4", 5, 15),
-    CostConfig("gpt-4-1106-preview", 5, 15),
-    CostConfig("gpt-4o-mini", 0.15, 0.6),
+    CostConfig("gpt-4-turbo", 10, 30),
+    CostConfig("gpt-4", 30, 60),
+    CostConfig("gpt-4-1106-preview", 10, 60),
+    CostConfig("gpt-4o-mini", 0.15, 0.075),
+    CostConfig("o1-preview", 15, 60),
+    CostConfig("o1-mini", 3, 1.5),
 ]
 
 
@@ -113,7 +116,9 @@ def build_client(config):
             azure_deployment=os.environ.get("OPENAI_API_AZURE_ENGINE"),
         )
     else:
-        return openai.OpenAI(api_key=config["openai_api_key"], base_url=config["openai_base_url"])
+        return openai.OpenAI(
+            api_key=config["openai_api_key"], base_url=config["openai_base_url"]
+        )
 
 
 def query_chat_gpt(messages, config):
